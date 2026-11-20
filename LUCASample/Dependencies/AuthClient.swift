@@ -1,3 +1,5 @@
+import Architecture
+
 /// ログインの接続
 struct AuthClient: DependencyClient {
 

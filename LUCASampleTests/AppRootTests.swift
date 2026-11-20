@@ -1,5 +1,6 @@
-import Testing
+import Architecture
 @testable import LUCASample
+import Testing
 
 /// アプリの一番上のストアのテスト
 ///

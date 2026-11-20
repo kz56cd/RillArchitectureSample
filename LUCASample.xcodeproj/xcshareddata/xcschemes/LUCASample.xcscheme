@@ -50,6 +50,17 @@
                ReferencedContainer = "container:LUCASample.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ArchitectureTests"
+               BuildableName = "ArchitectureTests"
+               BlueprintName = "ArchitectureTests"
+               ReferencedContainer = "container:Packages/Architecture">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <CommandLineArguments>
       </CommandLineArguments>

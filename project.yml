@@ -11,12 +11,18 @@ settings:
     # ストアも View も MainActor で動かす。宣言ごとに @MainActor を書かない。
     SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
     "EXCLUDED_ARCHS[sdk=iphonesimulator*]": x86_64
+packages:
+  Architecture:
+    path: Packages/Architecture
 targets:
   LUCASample:
     type: application
     platform: iOS
     sources:
       - path: LUCASample
+    dependencies:
+      - package: Architecture
+        product: Architecture
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.example.luca-sample
@@ -44,3 +50,4 @@ schemes:
     test:
       targets:
         - LUCASampleTests
+        - package: Architecture/ArchitectureTests

@@ -7,7 +7,7 @@
 /// - 親は子を作るときに `action` を渡し、子の Action を自分の Action に包んで受け取る。
 ///
 /// モジュールの既定の隔離を MainActor にしているので、`@MainActor` は書かない。
-protocol Composable: AnyObject {
+public protocol Composable: AnyObject {
     associatedtype Action: Sendable
 
     /// 親への通知
@@ -17,7 +17,7 @@ protocol Composable: AnyObject {
     func reduce(_ action: Action) async
 }
 
-extension Composable {
+public extension Composable {
     func reduce(_ action: Action) async {}
 
     /// Action を送る。

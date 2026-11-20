@@ -1,6 +1,6 @@
 import SwiftUI
 
-extension Composable {
+public extension Composable {
     /// 子のストアを出す画面(シートなど)に渡す Binding
     ///
     /// ストアの状態は `private(set)` なので、`$store.detail` のようには束縛できない。

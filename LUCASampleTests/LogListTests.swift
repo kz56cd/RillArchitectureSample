@@ -1,5 +1,6 @@
-import Testing
+import Architecture
 @testable import LUCASample
+import Testing
 
 /// 子のストアをシートで出す連携のテスト
 struct LogListTests {

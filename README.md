@@ -14,7 +14,8 @@ SwiftUI のアプリのアーキテクチャを選ぶための見本。[LUCA](ht
 
 ```sh
 make generate              # project.yml から LUCASample.xcodeproj を作る(XcodeGen は mint で入れる)
-make test                  # ストアのテスト(Swift Testing)
+make test                  # アプリのストアと Architecture パッケージのテスト(Swift Testing、シミュレーター)
+make test-architecture     # Architecture パッケージのテストだけ(swift test、macOS で手早く)
 make check-unidirectional  # 単一方向を破る書き方が、コンパイルエラーになることを確かめる
 make check                 # 上の 2 つ
 ```
@@ -29,20 +30,27 @@ make check                 # 上の 2 つ
 ### 層と依存の向き
 
 矢印は「使う」向き。View はストアだけを、ストアは依存だけを知る。
+ストアと依存の決まり(`Composable`、`DependencyClient`)は、アプリから切り離した `Architecture` パッケージに置く。
+パッケージはアプリの型を知らない。
 
 ```mermaid
 flowchart TB
-    subgraph Views["Views(SwiftUI)"]
-        V["LoginView / NewLogView / LogListView ..."]
+    subgraph App["アプリ(LUCASample)"]
+        subgraph Views["Views(SwiftUI)"]
+            V["LoginView / NewLogView / LogListView ..."]
+        end
+        subgraph Stores["Stores(@Observable + Composable)"]
+            S["AppRoot / HomeTabs / NewLog / LogList ..."]
+        end
+        subgraph Dependencies["Dependencies(DependencyClient)"]
+            D["AppDependencies<br/>AuthClient / ReadingLogClient"]
+        end
+        subgraph Models["Models(値の型)"]
+            M["ReadingLog / ReadingLogDraft"]
+        end
     end
-    subgraph Stores["Stores(@Observable + Composable)"]
-        S["AppRoot / HomeTabs / NewLog / LogList ..."]
-    end
-    subgraph Dependencies["Dependencies(DependencyClient)"]
-        D["AppDependencies<br/>AuthClient / ReadingLogClient"]
-    end
-    subgraph Models["Models(値の型)"]
-        M["ReadingLog / ReadingLogDraft"]
+    subgraph Package["Architecture パッケージ"]
+        P["Composable / DependencyClient<br/>testDependency / presentation"]
     end
     Live["liveValue<br/>(本番。見本ではメモリの保存先)"]
     Test["testValue<br/>(テストで差し替える)"]
@@ -52,6 +60,9 @@ flowchart TB
     D --- Live
     D --- Test
     V & S & D -.-> M
+    S -- "準拠する" --> P
+    D -- "準拠する" --> P
+    V -- "presentation を使う" --> P
 ```
 
 ### 1 つの画面の中の流れ(単一方向)
@@ -158,7 +169,8 @@ sequenceDiagram
 
 | ディレクトリ | 中身 |
 |---|---|
-| `LUCASample/Architecture` | `Composable`(LUCA のまま)、`DependencyClient`、シートの Binding の補助 |
+| `Packages/Architecture/Sources/Architecture` | `Composable`(LUCA のまま)、`DependencyClient`、シートの Binding の補助 |
+| `Packages/Architecture/Tests/ArchitectureTests` | パッケージのテスト |
 | `LUCASample/Dependencies` | `AppDependencies`、`AuthClient`、`ReadingLogClient` |
 | `LUCASample/Models` | 読書の記録と、入力の確かめ |
 | `LUCASample/Stores` | 画面ごとのストア |
@@ -171,12 +183,15 @@ sequenceDiagram
 ### 1. 状態管理がアーキテクチャとして組み込まれている
 
 - 画面の状態は、すべてストア(`Stores/`)に置く。View は状態を持たない(`@State` はアプリの一番上の `AppRoot` だけ)。
-- 状態を変える入口は `send(Action)` の 1 つだけ(`Architecture/Composable.swift`)。
+- 状態を変える入口は `send(Action)` の 1 つだけ(`Packages/Architecture/Sources/Architecture/Composable.swift`)。
 - 遷移も状態として持つ。`AppRoot.screen`、`NewLog.phase`、`LogList.detail` に子のストアを入れれば出て、外せば消える。
 
 ### 2. テストしやすい
 
-`make test` で 21 件。どれも View を立ち上げず、ストアを作って `await send(...)` し、状態を確かめるだけ。
+`make test` で 33 件(アプリのストア 21 件、Architecture パッケージ 12 件)。
+どれも View を立ち上げず、ストアを作って `await send(...)` し、状態を確かめるだけ。
+
+アプリのストアのテスト(`LUCASampleTests`):
 
 | テスト | 確かめること |
 |---|---|
@@ -185,6 +200,16 @@ sequenceDiagram
 | `HomeTabsTests` | 兄弟。記録する画面で保存すると、親が中継して一覧に足される |
 | `LogListTests` | シートの子。子の「閉じる」「削除」で、親が閉じる |
 | `AppRootTests` | ログイン → 記録 → 一覧 → ログアウトを、Action だけで通す |
+
+Architecture パッケージのテスト(`ArchitectureTests`)。アプリの型を使わず、テスト用の小さなストアで決まりそのものを確かめる:
+
+| テスト | 確かめること |
+|---|---|
+| `ComposableTests` | `send` は `reduce` で状態を確定してから親へ伝える。`reduce` の中で待つ処理も終わりまで待つ。`reduce` の中から `send` すると結果が先に親へ届く。`reduce` を書かないストアは親へそのまま伝える |
+| `PresentationTests` | `presentation` の Binding は子のストアを返す。`nil` を入れると dismiss の Action を送って閉じる。`nil` 以外を入れても何も送らない |
+| `DependencyClientTests` | `testDependency` は差し替えた所だけを変え、`testValue` そのものは変えない |
+
+`send` の順番を逆にすると、`ComposableTests` と `PresentationTests` の 5 件が落ちることを確かめてある。
 
 `send` は `reduce` の終わりまで待つので、待ち合わせのコードは要らない。
 
@@ -202,7 +227,7 @@ sequenceDiagram
 4. `reduce` の中で `Task { }` を作らない。
 
 シートは `$store.detail` で束縛できない(決まり 1)。代わりに `store.presentation(\.detail, dismiss: .detailDismissed)`
-(`Architecture/Composable+Presentation.swift`)を使い、スワイプで閉じたときも Action を通す。
+(`Packages/Architecture/Sources/Architecture/Composable+Presentation.swift`)を使い、スワイプで閉じたときも Action を通す。
 
 ### 4. View 同士の連携がしやすい
 
@@ -216,7 +241,8 @@ sequenceDiagram
 
 ## LUCA との違い
 
-- 3 つのモジュールへの分割、`Scene` の層、`AppStateClient` は入れていない(この見本の規模では要らない)。
+- LUCA の 3 つのモジュール(UserInterface、Model、DataSource)への分割、`Scene` の層、`AppStateClient` は入れていない(この見本の規模では要らない)。
+  切り出したのは、どのアプリでも使える決まり(`Composable`、`DependencyClient`)の `Architecture` パッケージだけ。
 - 依存は Environment で配らず、ストアの init で受け取って子へ渡す。
 - 子のストアを init の中で作るときは、`weak var parent` を先に捕まえ、最後に `self` を入れる
   (init が終わるまで `[weak self]` を使えないため)。
@@ -233,6 +259,3 @@ sequenceDiagram
 
 - [LUCA: A Modern Architecture for SwiftUI Development](https://dev.to/kyome22/luca-a-modern-architecture-for-swiftui-development-3g2i)
 - [Kyome22/Telescopure の `Composable.swift`](https://github.com/Kyome22/Telescopure/blob/main/LocalPackage/Sources/Model/Composable.swift)
-
-
-コミットログにも残っていませんか？もし残っているなら1つのコミットログにまとめても構いません

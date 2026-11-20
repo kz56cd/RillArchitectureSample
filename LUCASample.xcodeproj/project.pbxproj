@@ -12,12 +12,11 @@
 		070656E28E0900E840FB4C1C /* LogList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832C0F6E35CBD059A660AEBC /* LogList.swift */; };
 		088E5E819C485CA0E9DCF388 /* HomeTabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDA9242C9641C83AFFD448B /* HomeTabs.swift */; };
 		110745B4F2777B6839E738F9 /* NewLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6339B531C86E56B322AE4D8F /* NewLogView.swift */; };
+		122A0FDB0702A8642FCA8025 /* Architecture in Frameworks */ = {isa = PBXBuildFile; productRef = 8B94F3EB0D0803BED9DCC654 /* Architecture */; };
 		1262D011290E47DE6F2BEFD2 /* NewLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCDD7D38DE01DB812CF9D99 /* NewLog.swift */; };
 		27F72814D8FA1A79D4EF0F2B /* NewLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2064093616F2022D0174275 /* NewLogTests.swift */; };
 		288EABECA1D50EFCEF0166B1 /* LUCASampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5871DCF6512DD3643868B427 /* LUCASampleApp.swift */; };
-		2D7739AF0AB5EAD101FC2D1D /* Composable+Presentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531DC0C4D2151493C5E4024A /* Composable+Presentation.swift */; };
 		2D92C94AACA7EAB7B567C350 /* LogListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC784C016024D67D6B43777 /* LogListTests.swift */; };
-		33FEDD839AE71628371B0841 /* Composable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCFB9EF28D014735C60477C /* Composable.swift */; };
 		3681667A0708F0B2B2EE2774 /* AppDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6E48D6574104777647873E /* AppDependencies.swift */; };
 		3E555DF7374F65EB21A3A584 /* AppRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = F490B2F9D779CAA1FA3B5A84 /* AppRoot.swift */; };
 		4582EA61254C8402CAA960B5 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4B20D7C013475A38B0FB158 /* LoginView.swift */; };
@@ -29,7 +28,6 @@
 		7E7AE95023F3ED0E7350A319 /* AppRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5601449976C98E3BED1A252E /* AppRootView.swift */; };
 		B6E085487E29B4189942AE0B /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CA329DD06BE3740BA47161 /* Login.swift */; };
 		B85F6960B10FDA3FCCF4B6A4 /* LogListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C0485D6510A44CA6A42127 /* LogListView.swift */; };
-		BCDF58AB5AFDBA4E40529A42 /* DependencyClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB17E6E60B5ABE8597C46CC5 /* DependencyClient.swift */; };
 		C460609147803244C14391C6 /* AppRootTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4797446CBADE4846E989E0B /* AppRootTests.swift */; };
 		D06BE499B81C8FF179978DA4 /* LogFormTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0597EE7642E929ABCB737A53 /* LogFormTests.swift */; };
 		F44389540DBCAB2ED2BF938E /* HomeTabsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79DF24C82B1A591945D113AE /* HomeTabsTests.swift */; };
@@ -56,8 +54,6 @@
 		32D1318C0A3288A34AD429BA /* HomeTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabsView.swift; sourceTree = "<group>"; };
 		4233C6ABF0E5AB7637164DEE /* LUCASample.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = LUCASample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48CAC56287EC7092E04B151E /* TestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSupport.swift; sourceTree = "<group>"; };
-		4BCFB9EF28D014735C60477C /* Composable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Composable.swift; sourceTree = "<group>"; };
-		531DC0C4D2151493C5E4024A /* Composable+Presentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Composable+Presentation.swift"; sourceTree = "<group>"; };
 		53CA329DD06BE3740BA47161 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
 		5601449976C98E3BED1A252E /* AppRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootView.swift; sourceTree = "<group>"; };
 		5871DCF6512DD3643868B427 /* LUCASampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LUCASampleApp.swift; sourceTree = "<group>"; };
@@ -72,13 +68,32 @@
 		BFDA9242C9641C83AFFD448B /* HomeTabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabs.swift; sourceTree = "<group>"; };
 		C0C0485D6510A44CA6A42127 /* LogListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogListView.swift; sourceTree = "<group>"; };
 		E2064093616F2022D0174275 /* NewLogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLogTests.swift; sourceTree = "<group>"; };
+		E2A798F299D6C92B80FAFD1D /* Architecture */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Architecture; path = Packages/Architecture; sourceTree = SOURCE_ROOT; };
 		E4797446CBADE4846E989E0B /* AppRootTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootTests.swift; sourceTree = "<group>"; };
 		E6C1CBE04A7F63EBC7F152F3 /* LogForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogForm.swift; sourceTree = "<group>"; };
-		EB17E6E60B5ABE8597C46CC5 /* DependencyClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyClient.swift; sourceTree = "<group>"; };
 		F490B2F9D779CAA1FA3B5A84 /* AppRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRoot.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFrameworksBuildPhase section */
+		C4E884DCE93197F2677DA6D5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				122A0FDB0702A8642FCA8025 /* Architecture in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
 /* Begin PBXGroup section */
+		29E8BD6F47AB53DE4CA3B2BA /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				E2A798F299D6C92B80FAFD1D /* Architecture */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
 		4CF4F4F817C05949C540830B /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
@@ -130,6 +145,7 @@
 			children = (
 				DBFB80211C7478858EBFA7F5 /* LUCASample */,
 				5A40AB5F35F09879916E3244 /* LUCASampleTests */,
+				29E8BD6F47AB53DE4CA3B2BA /* Packages */,
 				E2A0DEDF64B0352A20C4B288 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -142,21 +158,10 @@
 			path = App;
 			sourceTree = "<group>";
 		};
-		C03FAF4B1029F6ACF3233FF0 /* Architecture */ = {
-			isa = PBXGroup;
-			children = (
-				4BCFB9EF28D014735C60477C /* Composable.swift */,
-				531DC0C4D2151493C5E4024A /* Composable+Presentation.swift */,
-				EB17E6E60B5ABE8597C46CC5 /* DependencyClient.swift */,
-			);
-			path = Architecture;
-			sourceTree = "<group>";
-		};
 		DBFB80211C7478858EBFA7F5 /* LUCASample */ = {
 			isa = PBXGroup;
 			children = (
 				B79AA08F38756404D04DE110 /* App */,
-				C03FAF4B1029F6ACF3233FF0 /* Architecture */,
 				4CF4F4F817C05949C540830B /* Dependencies */,
 				69D90071467D4A4A9791AEBB /* Models */,
 				5231E478F8260E7DF94BB7D1 /* Stores */,
@@ -194,6 +199,7 @@
 			buildConfigurationList = 4A5F8393601CDA96F0EF49D4 /* Build configuration list for PBXNativeTarget "LUCASample" */;
 			buildPhases = (
 				A6F83F6C482C93364B83C6A0 /* Sources */,
+				C4E884DCE93197F2677DA6D5 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -201,6 +207,7 @@
 			);
 			name = LUCASample;
 			packageProductDependencies = (
+				8B94F3EB0D0803BED9DCC654 /* Architecture */,
 			);
 			productName = LUCASample;
 			productReference = 4233C6ABF0E5AB7637164DEE /* LUCASample.app */;
@@ -244,6 +251,9 @@
 			);
 			mainGroup = 6D8BE0D2FEC32A82A2035FB7;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				C69BA549F701921F07C1ED35 /* XCLocalSwiftPackageReference "Packages/Architecture" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E2A0DEDF64B0352A20C4B288 /* Products */;
 			projectDirPath = "";
@@ -264,9 +274,6 @@
 				3E555DF7374F65EB21A3A584 /* AppRoot.swift in Sources */,
 				7E7AE95023F3ED0E7350A319 /* AppRootView.swift in Sources */,
 				0244C2B2BCE4D7634ABC19D0 /* AuthClient.swift in Sources */,
-				2D7739AF0AB5EAD101FC2D1D /* Composable+Presentation.swift in Sources */,
-				33FEDD839AE71628371B0841 /* Composable.swift in Sources */,
-				BCDF58AB5AFDBA4E40529A42 /* DependencyClient.swift in Sources */,
 				088E5E819C485CA0E9DCF388 /* HomeTabs.swift in Sources */,
 				5EBC403397CC07A644103DF3 /* HomeTabsView.swift in Sources */,
 				288EABECA1D50EFCEF0166B1 /* LUCASampleApp.swift in Sources */,
@@ -534,6 +541,20 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		C69BA549F701921F07C1ED35 /* XCLocalSwiftPackageReference "Packages/Architecture" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/Architecture;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8B94F3EB0D0803BED9DCC654 /* Architecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Architecture;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4B2F4CC842A802B98AA1438C /* Project object */;
 }

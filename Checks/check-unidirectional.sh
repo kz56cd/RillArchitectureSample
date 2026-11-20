@@ -13,14 +13,25 @@ while IFS= read -r file; do
     sources+=("$file")
 done < <(find LUCASample -name '*.swift' | sort)
 
-typecheck() {
-    xcrun --sdk iphonesimulator swiftc -typecheck \
+swiftc_simulator() {
+    xcrun --sdk iphonesimulator swiftc \
         -target arm64-apple-ios26.0-simulator \
         -swift-version 6 \
         -default-isolation MainActor \
-        -module-name LUCASample \
         -parse-as-library \
         "$@"
+}
+
+# アプリが import する Architecture パッケージを、先にモジュールとして作る。
+modules=$(mktemp -d)
+trap 'rm -rf "$modules"' EXIT
+swiftc_simulator -emit-module \
+    -module-name Architecture \
+    -emit-module-path "$modules/Architecture.swiftmodule" \
+    Packages/Architecture/Sources/Architecture/*.swift
+
+typecheck() {
+    swiftc_simulator -typecheck -module-name LUCASample -I "$modules" "$@"
 }
 
 echo "1. アプリのソースだけで型検査する"

@@ -1,3 +1,4 @@
+import Architecture
 import Observation
 
 /// タブの画面のストア

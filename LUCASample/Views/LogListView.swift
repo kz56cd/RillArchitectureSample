@@ -1,3 +1,4 @@
+import Architecture
 import SwiftUI
 
 /// 記録の一覧の画面

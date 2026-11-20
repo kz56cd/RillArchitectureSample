@@ -1,3 +1,4 @@
+import Architecture
 import Observation
 
 /// アプリの一番上のストア

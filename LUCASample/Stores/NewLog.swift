@@ -1,3 +1,4 @@
+import Architecture
 import Observation
 
 /// 記録する画面のストア
