@@ -1,4 +1,4 @@
-# LUCA の `Composable` の見本
+# LUCA-extracted architecture sample
 
 SwiftUI のアプリのアーキテクチャを選ぶための見本。[LUCA](https://dev.to/kyome22/luca-a-modern-architecture-for-swiftui-development-3g2i) の `Composable` だけを取り入れ、
 決まりを 4 つ足した構成で、次の 4 つを満たせることを確かめる。
