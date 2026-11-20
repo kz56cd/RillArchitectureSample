@@ -1,0 +1,46 @@
+name: LUCASample
+options:
+  bundleIdPrefix: com.example
+  developmentLanguage: ja
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "6.4"
+    # ストアも View も MainActor で動かす。宣言ごとに @MainActor を書かない。
+    SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": x86_64
+targets:
+  LUCASample:
+    type: application
+    platform: iOS
+    sources:
+      - path: LUCASample
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.luca-sample
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: "YES"
+        INFOPLIST_KEY_CFBundleDisplayName: LUCASample
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: "YES"
+        INFOPLIST_KEY_UILaunchScreen_Generation: "YES"
+  LUCASampleTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: LUCASampleTests
+    dependencies:
+      - target: LUCASample
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.luca-sample.tests
+        GENERATE_INFOPLIST_FILE: "YES"
+schemes:
+  LUCASample:
+    build:
+      targets:
+        LUCASample: all
+    test:
+      targets:
+        - LUCASampleTests

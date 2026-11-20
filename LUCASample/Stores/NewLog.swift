@@ -1,0 +1,54 @@
+import Observation
+
+/// 記録する画面のストア
+///
+/// 入力中(子の `LogForm`)と保存したあとを、`phase` で出し分ける。
+/// 子から保存できたと届いたら、保存したあとへ切り替える。
+@Observable
+final class NewLog: Composable {
+
+    enum Phase {
+        case editing(LogForm)
+        case saved(ReadingLog)
+    }
+
+    // MARK: State
+
+    private(set) var phase: Phase
+
+    // MARK: Properties
+
+    private let appDependencies: AppDependencies
+    let action: (Action) async -> Void
+
+    // MARK: Initializers
+
+    init(_ appDependencies: AppDependencies, action: @escaping (Action) async -> Void = { _ in }) {
+        // self を捕まえる方法は AppRoot の init と同じ。
+        weak var parent: NewLog?
+        phase = .editing(LogForm(appDependencies, action: { await parent?.send(.form($0)) }))
+        self.appDependencies = appDependencies
+        self.action = action
+        parent = self
+    }
+
+    // MARK: Functions
+
+    func reduce(_ action: Action) async {
+        switch action {
+        case .writeAnotherButtonTapped:
+            phase = .editing(LogForm(appDependencies, action: { [weak self] in await self?.send(.form($0)) }))
+
+        case let .form(.saveResponse(.success(saved))):
+            phase = .saved(saved)
+
+        case .form:
+            break
+        }
+    }
+
+    enum Action: Sendable {
+        case writeAnotherButtonTapped
+        case form(LogForm.Action)
+    }
+}
