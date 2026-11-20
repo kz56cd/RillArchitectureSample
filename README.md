@@ -1,7 +1,13 @@
 # RillArchitectureSample
 
-SwiftUI のアプリのアーキテクチャ **Rill** の見本。Rill は、[LUCA](https://dev.to/kyome22/luca-a-modern-architecture-for-swiftui-development-3g2i) から `Composable` だけを抜き出し、
-決まりを 4 つ足した構成。次の 4 つを満たせることを確かめる。
+<p align="center">
+<img width="300" alt="rill-logo" src="https://github.com/user-attachments/assets/d7047b11-a24b-4ba7-8931-751d055ae67a" />
+</p>
+
+SwiftUI のアプリのアーキテクチャ **Rill** の見本。
+
+Rill は、[LUCA](https://dev.to/kyome22/luca-a-modern-architecture-for-swiftui-development-3g2i) から着想を得ており、
+LUCAのうち `Composable` だけを抜き出し、決まりを 4 つ足した構成。次の 4 つを満たせることを確かめる。
 
 - 状態管理がアーキテクチャとして組み込まれている
 - テストしやすい
