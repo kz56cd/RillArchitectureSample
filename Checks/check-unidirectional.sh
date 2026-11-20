@@ -11,7 +11,7 @@ violations=Checks/UnidirectionalViolations.swift
 sources=()
 while IFS= read -r file; do
     sources+=("$file")
-done < <(find LUCASample -name '*.swift' | sort)
+done < <(find RillArchitectureSample -name '*.swift' | sort)
 
 swiftc_simulator() {
     xcrun --sdk iphonesimulator swiftc \
@@ -22,16 +22,16 @@ swiftc_simulator() {
         "$@"
 }
 
-# アプリが import する Architecture パッケージを、先にモジュールとして作る。
+# アプリが import する Rill パッケージを、先にモジュールとして作る。
 modules=$(mktemp -d)
 trap 'rm -rf "$modules"' EXIT
 swiftc_simulator -emit-module \
-    -module-name Architecture \
-    -emit-module-path "$modules/Architecture.swiftmodule" \
-    Packages/Architecture/Sources/Architecture/*.swift
+    -module-name Rill \
+    -emit-module-path "$modules/Rill.swiftmodule" \
+    Packages/Rill/Sources/Rill/*.swift
 
 typecheck() {
-    swiftc_simulator -typecheck -module-name LUCASample -I "$modules" "$@"
+    swiftc_simulator -typecheck -module-name RillArchitectureSample -I "$modules" "$@"
 }
 
 echo "1. アプリのソースだけで型検査する"

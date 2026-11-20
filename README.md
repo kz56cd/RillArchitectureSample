@@ -1,7 +1,7 @@
-# LUCA-extracted architecture sample
+# RillArchitectureSample
 
-SwiftUI のアプリのアーキテクチャを選ぶための見本。[LUCA](https://dev.to/kyome22/luca-a-modern-architecture-for-swiftui-development-3g2i) の `Composable` だけを取り入れ、
-決まりを 4 つ足した構成で、次の 4 つを満たせることを確かめる。
+SwiftUI のアプリのアーキテクチャ **Rill** の見本。Rill は、[LUCA](https://dev.to/kyome22/luca-a-modern-architecture-for-swiftui-development-3g2i) から `Composable` だけを抜き出し、
+決まりを 4 つ足した構成。次の 4 つを満たせることを確かめる。
 
 - 状態管理がアーキテクチャとして組み込まれている
 - テストしやすい
@@ -10,17 +10,19 @@ SwiftUI のアプリのアーキテクチャを選ぶための見本。[LUCA](ht
 
 題材は、読んだ本を記録する小さなアプリ(ログイン、記録する、一覧、詳しい画面)。
 
+名前の Rill は「小さな流れ」のこと。状態が一方向に流れることと、中心が小さい(20 行ほどのプロトコル)ことから。
+
 ## 動かし方
 
 ```sh
-make generate              # project.yml から LUCASample.xcodeproj を作る(XcodeGen は mint で入れる)
-make test                  # アプリのストアと Architecture パッケージのテスト(Swift Testing、シミュレーター)
-make test-architecture     # Architecture パッケージのテストだけ(swift test、macOS で手早く)
+make generate              # project.yml から RillArchitectureSample.xcodeproj を作る(XcodeGen は mint で入れる)
+make test                  # アプリのストアと Rill パッケージのテスト(Swift Testing、シミュレーター)
+make test-rill             # Rill パッケージのテストだけ(swift test、macOS で手早く)
 make check-unidirectional  # 単一方向を破る書き方が、コンパイルエラーになることを確かめる
 make check                 # 上の 2 つ
 ```
 
-`LUCASample.xcodeproj` を開いて実行すると、ログイン → 記録する → 一覧を触れる。
+`RillArchitectureSample.xcodeproj` を開いて実行すると、ログイン → 記録する → 一覧を触れる。
 保存先はメモリの中だけなので、アプリを終えると記録は消える。ユーザー ID に `error` と入れるとログインに失敗する。
 
 動作の確認は Xcode 27.1、iOS 26 のシミュレーターで行った。
@@ -30,12 +32,12 @@ make check                 # 上の 2 つ
 ### 層と依存の向き
 
 矢印は「使う」向き。View はストアだけを、ストアは依存だけを知る。
-ストアと依存の決まり(`Composable`、`DependencyClient`)は、アプリから切り離した `Architecture` パッケージに置く。
+ストアと依存の決まり(`Composable`、`DependencyClient`)は、アプリから切り離した `Rill` パッケージに置く。
 パッケージはアプリの型を知らない。
 
 ```mermaid
 flowchart TB
-    subgraph App["アプリ(LUCASample)"]
+    subgraph App["アプリ(RillArchitectureSample)"]
         subgraph Views["Views(SwiftUI)"]
             V["LoginView / NewLogView / LogListView ..."]
         end
@@ -49,7 +51,7 @@ flowchart TB
             M["ReadingLog / ReadingLogDraft"]
         end
     end
-    subgraph Package["Architecture パッケージ"]
+    subgraph Package["Rill パッケージ"]
         P["Composable / DependencyClient / PrettyPrinter<br/>testDependency / presentation"]
     end
     Live["liveValue<br/>(本番。見本ではメモリの保存先)"]
@@ -87,7 +89,7 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    App["LUCASampleApp<br/>@State で AppRoot を持つ"] --> AppRoot
+    App["RillArchitectureSampleApp<br/>@State で AppRoot を持つ"] --> AppRoot
     AppRoot["AppRoot<br/>ログインの状態で出し分ける"]
     AppRoot -- "screen = .login" --> Login["Login<br/>ログインする前"]
     AppRoot -- "screen = .main" --> HomeTabs["HomeTabs<br/>兄弟の連携を中継する"]
@@ -169,13 +171,13 @@ sequenceDiagram
 
 | ディレクトリ | 中身 |
 |---|---|
-| `Packages/Architecture/Sources/Architecture` | `Composable`(LUCA をもとに `State` を足したもの)、`DependencyClient`、`PrettyPrinter`、シートの Binding の補助 |
-| `Packages/Architecture/Tests/ArchitectureTests` | パッケージのテスト |
-| `LUCASample/Dependencies` | `AppDependencies`、`AuthClient`、`ReadingLogClient` |
-| `LUCASample/Models` | 読書の記録と、入力の確かめ |
-| `LUCASample/Stores` | 画面ごとのストア |
-| `LUCASample/Views` | 画面ごとの View |
-| `LUCASampleTests` | ストアのテスト |
+| `Packages/Rill/Sources/Rill` | `Composable`(LUCA をもとに `State` を足したもの)、`DependencyClient`、`PrettyPrinter`、シートの Binding の補助 |
+| `Packages/Rill/Tests/RillTests` | パッケージのテスト |
+| `RillArchitectureSample/Dependencies` | `AppDependencies`、`AuthClient`、`ReadingLogClient` |
+| `RillArchitectureSample/Models` | 読書の記録と、入力の確かめ |
+| `RillArchitectureSample/Stores` | 画面ごとのストア |
+| `RillArchitectureSample/Views` | 画面ごとの View |
+| `RillArchitectureSampleTests` | ストアのテスト |
 | `Checks` | 単一方向の確かめ |
 
 ## 4 つの条件をどこで確かめるか
@@ -184,7 +186,7 @@ sequenceDiagram
 
 - 画面の状態は、すべてストア(`Stores/`)の `State` の構造体にまとめ、`private(set) var state` で持つ。
   View は状態を持たない(`@State` はアプリの一番上の `AppRoot` だけ)。
-- `Composable` が `State` と `state` を要件にしているので、どのストアも同じ形になる(`Packages/Architecture/Sources/Architecture/Composable.swift`)。
+- `Composable` が `State` と `state` を要件にしているので、どのストアも同じ形になる(`Packages/Rill/Sources/Rill/Composable.swift`)。
 - 状態を変える入口は `send(Action)` の 1 つだけ。
 - 遷移も状態として持つ。`AppRoot.State.screen`、`NewLog.State.phase`、`LogList.State.detail` に子のストアを入れれば出て、外せば消える。
 
@@ -243,10 +245,10 @@ AppRoot.State(
 
 ### 2. テストしやすい
 
-`make test` で 47 件(アプリのストア 22 件、Architecture パッケージ 25 件)。
+`make test` で 47 件(アプリのストア 22 件、Rill パッケージ 25 件)。
 どれも View を立ち上げず、ストアを作って `await send(...)` し、状態を確かめるだけ。
 
-アプリのストアのテスト(`LUCASampleTests`):
+アプリのストアのテスト(`RillArchitectureSampleTests`):
 
 | テスト | 確かめること |
 |---|---|
@@ -256,7 +258,7 @@ AppRoot.State(
 | `LogListTests` | シートの子。子の「閉じる」「削除」で、親が閉じる |
 | `AppRootTests` | ログイン → 記録 → 一覧 → ログアウトを、Action だけで通す。アプリ全体の状態を `prettyState` で丸ごと比べる |
 
-Architecture パッケージのテスト(`ArchitectureTests`)。アプリの型を使わず、テスト用の小さなストアで決まりそのものを確かめる:
+Rill パッケージのテスト(`RillTests`)。アプリの型を使わず、テスト用の小さなストアで決まりそのものを確かめる:
 
 | テスト | 確かめること |
 |---|---|
@@ -284,7 +286,7 @@ Architecture パッケージのテスト(`ArchitectureTests`)。アプリの型�
 4. `reduce` の中で `Task { }` を作らない。
 
 シートは `$store.state.detail` で束縛できない(決まり 1)。代わりに `store.presentation(\.state.detail, dismiss: .detailDismissed)`
-(`Packages/Architecture/Sources/Architecture/Composable+Presentation.swift`)を使い、スワイプで閉じたときも Action を通す。
+(`Packages/Rill/Sources/Rill/Composable+Presentation.swift`)を使い、スワイプで閉じたときも Action を通す。
 
 ### 4. View 同士の連携がしやすい
 
@@ -340,7 +342,7 @@ flowchart LR
 ## UIKit で使う
 
 使える。ストア、依存、テストは UI の仕組みに依存しないので、そのまま使える。変わるのは View の層だけ。
-(`Architecture` パッケージで SwiftUI を使っているのは、シートの Binding の補助の `presentation` だけ。)
+(`Rill` パッケージで SwiftUI を使っているのは、シートの Binding の補助の `presentation` だけ。)
 
 見本には UIKit の画面を含めていない。下のコードは、アプリのソースと一緒に型検査が通ることだけを確かめた概要で、動かしてはいない。
 
@@ -422,15 +424,15 @@ final class LogListViewController: UIViewController, UIAdaptivePresentationContr
 - **iOS 26 より前で使うとき。** iOS 18 では Info.plist に `UIObservationTrackingEnabled` を `YES` で足すと、
   `viewWillLayoutSubviews()` などで読んだ値が追われる(`updateProperties()` は iOS 26 から)。
   iOS 17 では `withObservationTracking` で自分で購読し直す必要がある。
-- **`presentation` は SwiftUI 専用。** UIKit だけのアプリで使うなら、`presentation` を `Architecture` から
-  別のターゲット(例:`ArchitectureSwiftUI`)へ分けると、`Architecture` が SwiftUI に依存しなくなる。
+- **`presentation` は SwiftUI 専用。** UIKit だけのアプリで使うなら、`presentation` を `Rill` から
+  別のターゲット(例:`RillSwiftUI`)へ分けると、`Rill` が SwiftUI に依存しなくなる。
 - **テストは変わらない。** ストアのテストは View を立ち上げないので、UIKit でも SwiftUI でも同じものが使える。
   SwiftUI と UIKit の画面を混ぜても、同じストアを渡せばよい。
 
 ## LUCA との違い
 
 - LUCA の 3 つのモジュール(UserInterface、Model、DataSource)への分割、`Scene` の層、`AppStateClient` は入れていない(この見本の規模では要らない)。
-  切り出したのは、どのアプリでも使える決まり(`Composable`、`DependencyClient`)の `Architecture` パッケージだけ。
+  切り出したのは、どのアプリでも使える決まり(`Composable`、`DependencyClient`)の `Rill` パッケージだけ。
 - 状態を 1 つの `State` の構造体にまとめる(LUCA は、ストアの中にふつうの `var` で並べる)。
   `Composable` の要件にしたので、どのストアでも `state` で読み、`prettyState` で出せる。
 - 依存は Environment で配らず、ストアの init で受け取って子へ渡す。

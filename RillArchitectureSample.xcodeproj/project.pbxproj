@@ -1,0 +1,560 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		11F5011B47EF16D216AF28D1 /* AppRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E47DD987613CFAF9DD91752 /* AppRoot.swift */; };
+		17163BC4DA8E259515206FE6 /* ReadingLogClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C18BD006C67908DCAD8B8C4 /* ReadingLogClient.swift */; };
+		1AADC80A5D412EB92EEEA286 /* HomeTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA2A0709C7DABBBA12A8960 /* HomeTabsView.swift */; };
+		29CA92FB9C5F708AA03B7D6B /* NewLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F5BD15245BF4E868270BD58 /* NewLogView.swift */; };
+		2B451C1DA5B37306DAEBC7FD /* LogListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9DD3116339C4DCFCFCAAEE /* LogListView.swift */; };
+		370630C85F4B1E501E362447 /* ReadingLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD71B056281F25BBB2BA5262 /* ReadingLog.swift */; };
+		386F4D3EC1F6E403241B0C9B /* LogList.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA71CBB28C54AE023234E274 /* LogList.swift */; };
+		444D932BAA82003260674482 /* AppRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF5842CEE9CB49B47736755 /* AppRootView.swift */; };
+		517F34F9447CFF6724DC69A6 /* LogListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF661CB8AC66BCA2A412939 /* LogListTests.swift */; };
+		58789CD3E4751D378922C1CE /* NewLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D34B83A7AF8CF3BAAEF01E8 /* NewLog.swift */; };
+		597695EAD8158DADFE4D31B2 /* AuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CCB8707FD0725392CEA356 /* AuthClient.swift */; };
+		732F28ABA60C7CC265156660 /* TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80148E04A5BC5F848A74E733 /* TestSupport.swift */; };
+		7F33523CA6E46687771CEE36 /* Rill in Frameworks */ = {isa = PBXBuildFile; productRef = 4C19FB6226527AC60F4402E9 /* Rill */; };
+		8074B3F6EC319CFCC456DE6D /* AppRootTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92621F92E7AAA282EA6113B3 /* AppRootTests.swift */; };
+		9032F01CD1C0259A0813835F /* AppDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E80E4D1AF4C17971F89488B /* AppDependencies.swift */; };
+		B2614FCA2BDFDA8FB34F35C9 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E13E129999004941E1114EF /* LoginView.swift */; };
+		B2E1747356416CB60C18B1A1 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = E144C277B6A6BF1DB95D69CD /* Login.swift */; };
+		BA85DE8B24767538DC856C19 /* HomeTabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 645B00B21AFC861F6D13E488 /* HomeTabs.swift */; };
+		C742951FFA7CBD65DD01C36A /* LogFormTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA9CC20999D2A71803734A2 /* LogFormTests.swift */; };
+		C82409258A8AEC5D49457A86 /* LogDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F6A1AC3DE01CECAC5A276 /* LogDetail.swift */; };
+		E36DBCE78D0A5D1E6B2B4995 /* LogForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A255E690160AC43CB55E13C /* LogForm.swift */; };
+		F40066E8E1FC700B1B4377EB /* HomeTabsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F0176255498F1217C152D4 /* HomeTabsTests.swift */; };
+		FB204D7D7BA2C6949441C378 /* ReadingLogDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DB2F7668871BCA29388159 /* ReadingLogDraft.swift */; };
+		FC8584F91F49B1368AC01508 /* RillArchitectureSampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A20FAAE349BFE450AD51F0 /* RillArchitectureSampleApp.swift */; };
+		FDD7E23A321EB878E2479C01 /* NewLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907BBC0BAA90ACADFABB49DE /* NewLogTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		079E63F3BBCA610A470846A3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C71B7B0E3BB3C8F97B23047 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DAA7845AD16F2C9B6A66EDCC;
+			remoteInfo = RillArchitectureSample;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0E80E4D1AF4C17971F89488B /* AppDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencies.swift; sourceTree = "<group>"; };
+		1C18BD006C67908DCAD8B8C4 /* ReadingLogClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingLogClient.swift; sourceTree = "<group>"; };
+		1F517544894E6F3538B0EDD6 /* Rill */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Rill; path = Packages/Rill; sourceTree = SOURCE_ROOT; };
+		2E13E129999004941E1114EF /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		3DA2A0709C7DABBBA12A8960 /* HomeTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabsView.swift; sourceTree = "<group>"; };
+		3FA9CC20999D2A71803734A2 /* LogFormTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogFormTests.swift; sourceTree = "<group>"; };
+		645B00B21AFC861F6D13E488 /* HomeTabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabs.swift; sourceTree = "<group>"; };
+		67A20FAAE349BFE450AD51F0 /* RillArchitectureSampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RillArchitectureSampleApp.swift; sourceTree = "<group>"; };
+		6E47DD987613CFAF9DD91752 /* AppRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRoot.swift; sourceTree = "<group>"; };
+		788C81527DD8CEB0C03C6318 /* RillArchitectureSample.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = RillArchitectureSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7CF661CB8AC66BCA2A412939 /* LogListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogListTests.swift; sourceTree = "<group>"; };
+		7D34B83A7AF8CF3BAAEF01E8 /* NewLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLog.swift; sourceTree = "<group>"; };
+		7F5BD15245BF4E868270BD58 /* NewLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLogView.swift; sourceTree = "<group>"; };
+		80148E04A5BC5F848A74E733 /* TestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSupport.swift; sourceTree = "<group>"; };
+		8A255E690160AC43CB55E13C /* LogForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogForm.swift; sourceTree = "<group>"; };
+		907BBC0BAA90ACADFABB49DE /* NewLogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLogTests.swift; sourceTree = "<group>"; };
+		92621F92E7AAA282EA6113B3 /* AppRootTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootTests.swift; sourceTree = "<group>"; };
+		956F6A1AC3DE01CECAC5A276 /* LogDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogDetail.swift; sourceTree = "<group>"; };
+		A7F0176255498F1217C152D4 /* HomeTabsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabsTests.swift; sourceTree = "<group>"; };
+		BAF5842CEE9CB49B47736755 /* AppRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootView.swift; sourceTree = "<group>"; };
+		D2CCB8707FD0725392CEA356 /* AuthClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthClient.swift; sourceTree = "<group>"; };
+		DD71B056281F25BBB2BA5262 /* ReadingLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingLog.swift; sourceTree = "<group>"; };
+		DF9DD3116339C4DCFCFCAAEE /* LogListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogListView.swift; sourceTree = "<group>"; };
+		E144C277B6A6BF1DB95D69CD /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
+		F1DB2F7668871BCA29388159 /* ReadingLogDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingLogDraft.swift; sourceTree = "<group>"; };
+		F84B6194E0B6B26E1F43982A /* RillArchitectureSampleTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = RillArchitectureSampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA71CBB28C54AE023234E274 /* LogList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogList.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C13A6424963914815C927770 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7F33523CA6E46687771CEE36 /* Rill in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080C5037A8F1C37D30BD30CE /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				1F517544894E6F3538B0EDD6 /* Rill */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
+		18EF28640ABAC041D732B709 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				788C81527DD8CEB0C03C6318 /* RillArchitectureSample.app */,
+				F84B6194E0B6B26E1F43982A /* RillArchitectureSampleTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		42B3B72E99952D75FA5A1901 /* RillArchitectureSample */ = {
+			isa = PBXGroup;
+			children = (
+				E5C10839ABEF1F78F52A2359 /* App */,
+				9E54C3D3B3DBC4BCE8BB7EBD /* Dependencies */,
+				DFCC18C9DCB0428C2F53580A /* Models */,
+				FC5967146E57F8580FCE4591 /* Stores */,
+				FDCB1BFBC61E075C521C6D5E /* Views */,
+			);
+			path = RillArchitectureSample;
+			sourceTree = "<group>";
+		};
+		60DB4E2C8FEBD1E629485B7E /* RillArchitectureSampleTests */ = {
+			isa = PBXGroup;
+			children = (
+				92621F92E7AAA282EA6113B3 /* AppRootTests.swift */,
+				A7F0176255498F1217C152D4 /* HomeTabsTests.swift */,
+				3FA9CC20999D2A71803734A2 /* LogFormTests.swift */,
+				7CF661CB8AC66BCA2A412939 /* LogListTests.swift */,
+				907BBC0BAA90ACADFABB49DE /* NewLogTests.swift */,
+				80148E04A5BC5F848A74E733 /* TestSupport.swift */,
+			);
+			path = RillArchitectureSampleTests;
+			sourceTree = "<group>";
+		};
+		9E54C3D3B3DBC4BCE8BB7EBD /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				0E80E4D1AF4C17971F89488B /* AppDependencies.swift */,
+				D2CCB8707FD0725392CEA356 /* AuthClient.swift */,
+				1C18BD006C67908DCAD8B8C4 /* ReadingLogClient.swift */,
+			);
+			path = Dependencies;
+			sourceTree = "<group>";
+		};
+		ABC83A86BCCFE25F7E40AFC7 = {
+			isa = PBXGroup;
+			children = (
+				080C5037A8F1C37D30BD30CE /* Packages */,
+				42B3B72E99952D75FA5A1901 /* RillArchitectureSample */,
+				60DB4E2C8FEBD1E629485B7E /* RillArchitectureSampleTests */,
+				18EF28640ABAC041D732B709 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DFCC18C9DCB0428C2F53580A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				DD71B056281F25BBB2BA5262 /* ReadingLog.swift */,
+				F1DB2F7668871BCA29388159 /* ReadingLogDraft.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E5C10839ABEF1F78F52A2359 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				67A20FAAE349BFE450AD51F0 /* RillArchitectureSampleApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		FC5967146E57F8580FCE4591 /* Stores */ = {
+			isa = PBXGroup;
+			children = (
+				6E47DD987613CFAF9DD91752 /* AppRoot.swift */,
+				645B00B21AFC861F6D13E488 /* HomeTabs.swift */,
+				956F6A1AC3DE01CECAC5A276 /* LogDetail.swift */,
+				8A255E690160AC43CB55E13C /* LogForm.swift */,
+				E144C277B6A6BF1DB95D69CD /* Login.swift */,
+				FA71CBB28C54AE023234E274 /* LogList.swift */,
+				7D34B83A7AF8CF3BAAEF01E8 /* NewLog.swift */,
+			);
+			path = Stores;
+			sourceTree = "<group>";
+		};
+		FDCB1BFBC61E075C521C6D5E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				BAF5842CEE9CB49B47736755 /* AppRootView.swift */,
+				3DA2A0709C7DABBBA12A8960 /* HomeTabsView.swift */,
+				2E13E129999004941E1114EF /* LoginView.swift */,
+				DF9DD3116339C4DCFCFCAAEE /* LogListView.swift */,
+				7F5BD15245BF4E868270BD58 /* NewLogView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		82CCF2DF8C00C433689B4B72 /* RillArchitectureSampleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7C285549CF96CEA8113E7482 /* Build configuration list for PBXNativeTarget "RillArchitectureSampleTests" */;
+			buildPhases = (
+				EBC5AE565EDF3AE9A3EA3A63 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7C4D54344ECF24BC37073F2B /* PBXTargetDependency */,
+			);
+			name = RillArchitectureSampleTests;
+			packageProductDependencies = (
+			);
+			productName = RillArchitectureSampleTests;
+			productReference = F84B6194E0B6B26E1F43982A /* RillArchitectureSampleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		DAA7845AD16F2C9B6A66EDCC /* RillArchitectureSample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5EF0418E5CDF85F1F3002247 /* Build configuration list for PBXNativeTarget "RillArchitectureSample" */;
+			buildPhases = (
+				58EF9F7A3F9CAB4BEDEE8D6A /* Sources */,
+				C13A6424963914815C927770 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RillArchitectureSample;
+			packageProductDependencies = (
+				4C19FB6226527AC60F4402E9 /* Rill */,
+			);
+			productName = RillArchitectureSample;
+			productReference = 788C81527DD8CEB0C03C6318 /* RillArchitectureSample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1C71B7B0E3BB3C8F97B23047 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 5FF992E2126AA9C3788B866B /* Build configuration list for PBXProject "RillArchitectureSample" */;
+			developmentRegion = ja;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				ja,
+			);
+			mainGroup = ABC83A86BCCFE25F7E40AFC7;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				0F94F328DCC3DF2C39F903AC /* XCLocalSwiftPackageReference "Packages/Rill" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 18EF28640ABAC041D732B709 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DAA7845AD16F2C9B6A66EDCC /* RillArchitectureSample */,
+				82CCF2DF8C00C433689B4B72 /* RillArchitectureSampleTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		58EF9F7A3F9CAB4BEDEE8D6A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9032F01CD1C0259A0813835F /* AppDependencies.swift in Sources */,
+				11F5011B47EF16D216AF28D1 /* AppRoot.swift in Sources */,
+				444D932BAA82003260674482 /* AppRootView.swift in Sources */,
+				597695EAD8158DADFE4D31B2 /* AuthClient.swift in Sources */,
+				BA85DE8B24767538DC856C19 /* HomeTabs.swift in Sources */,
+				1AADC80A5D412EB92EEEA286 /* HomeTabsView.swift in Sources */,
+				C82409258A8AEC5D49457A86 /* LogDetail.swift in Sources */,
+				E36DBCE78D0A5D1E6B2B4995 /* LogForm.swift in Sources */,
+				386F4D3EC1F6E403241B0C9B /* LogList.swift in Sources */,
+				2B451C1DA5B37306DAEBC7FD /* LogListView.swift in Sources */,
+				B2E1747356416CB60C18B1A1 /* Login.swift in Sources */,
+				B2614FCA2BDFDA8FB34F35C9 /* LoginView.swift in Sources */,
+				58789CD3E4751D378922C1CE /* NewLog.swift in Sources */,
+				29CA92FB9C5F708AA03B7D6B /* NewLogView.swift in Sources */,
+				370630C85F4B1E501E362447 /* ReadingLog.swift in Sources */,
+				17163BC4DA8E259515206FE6 /* ReadingLogClient.swift in Sources */,
+				FB204D7D7BA2C6949441C378 /* ReadingLogDraft.swift in Sources */,
+				FC8584F91F49B1368AC01508 /* RillArchitectureSampleApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EBC5AE565EDF3AE9A3EA3A63 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8074B3F6EC319CFCC456DE6D /* AppRootTests.swift in Sources */,
+				F40066E8E1FC700B1B4377EB /* HomeTabsTests.swift in Sources */,
+				C742951FFA7CBD65DD01C36A /* LogFormTests.swift in Sources */,
+				517F34F9447CFF6724DC69A6 /* LogListTests.swift in Sources */,
+				FDD7E23A321EB878E2479C01 /* NewLogTests.swift in Sources */,
+				732F28ABA60C7CC265156660 /* TestSupport.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7C4D54344ECF24BC37073F2B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DAA7845AD16F2C9B6A66EDCC /* RillArchitectureSample */;
+			targetProxy = 079E63F3BBCA610A470846A3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		065227E736BB076343E9F237 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = x86_64;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.4;
+			};
+			name = Debug;
+		};
+		72EFF3D3AB68A11E0CDE0EF2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = RillArchitectureSample;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.rill-architecture-sample";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		943FB64E950AB3E39ABDF4A5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = RillArchitectureSample;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.rill-architecture-sample";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A917559BF779750987553D79 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = x86_64;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.4;
+			};
+			name = Release;
+		};
+		AE1CBFAA319CCAB87C770B24 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.rill-architecture-sample.tests";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RillArchitectureSample.app/RillArchitectureSample";
+			};
+			name = Release;
+		};
+		AEC169F4452885B31D83E2E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.rill-architecture-sample.tests";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RillArchitectureSample.app/RillArchitectureSample";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5EF0418E5CDF85F1F3002247 /* Build configuration list for PBXNativeTarget "RillArchitectureSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				943FB64E950AB3E39ABDF4A5 /* Debug */,
+				72EFF3D3AB68A11E0CDE0EF2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5FF992E2126AA9C3788B866B /* Build configuration list for PBXProject "RillArchitectureSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				065227E736BB076343E9F237 /* Debug */,
+				A917559BF779750987553D79 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7C285549CF96CEA8113E7482 /* Build configuration list for PBXNativeTarget "RillArchitectureSampleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AEC169F4452885B31D83E2E3 /* Debug */,
+				AE1CBFAA319CCAB87C770B24 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		0F94F328DCC3DF2C39F903AC /* XCLocalSwiftPackageReference "Packages/Rill" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/Rill;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4C19FB6226527AC60F4402E9 /* Rill */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Rill;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 1C71B7B0E3BB3C8F97B23047 /* Project object */;
+}

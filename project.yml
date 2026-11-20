@@ -1,4 +1,4 @@
-name: LUCASample
+name: RillArchitectureSample
 options:
   bundleIdPrefix: com.example
   developmentLanguage: ja
@@ -12,42 +12,42 @@ settings:
     SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
     "EXCLUDED_ARCHS[sdk=iphonesimulator*]": x86_64
 packages:
-  Architecture:
-    path: Packages/Architecture
+  Rill:
+    path: Packages/Rill
 targets:
-  LUCASample:
+  RillArchitectureSample:
     type: application
     platform: iOS
     sources:
-      - path: LUCASample
+      - path: RillArchitectureSample
     dependencies:
-      - package: Architecture
-        product: Architecture
+      - package: Rill
+        product: Rill
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.example.luca-sample
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.rill-architecture-sample
         TARGETED_DEVICE_FAMILY: "1"
         GENERATE_INFOPLIST_FILE: "YES"
-        INFOPLIST_KEY_CFBundleDisplayName: LUCASample
+        INFOPLIST_KEY_CFBundleDisplayName: RillArchitectureSample
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: "YES"
         INFOPLIST_KEY_UILaunchScreen_Generation: "YES"
-  LUCASampleTests:
+  RillArchitectureSampleTests:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - path: LUCASampleTests
+      - path: RillArchitectureSampleTests
     dependencies:
-      - target: LUCASample
+      - target: RillArchitectureSample
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.example.luca-sample.tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.rill-architecture-sample.tests
         GENERATE_INFOPLIST_FILE: "YES"
 schemes:
-  LUCASample:
+  RillArchitectureSample:
     build:
       targets:
-        LUCASample: all
+        RillArchitectureSample: all
     test:
       targets:
-        - LUCASampleTests
-        - package: Architecture/ArchitectureTests
+        - RillArchitectureSampleTests
+        - package: Rill/RillTests
