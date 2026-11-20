@@ -14,8 +14,8 @@ struct LogListTests {
 
         await sut.send(.task)
 
-        #expect(sut.logs == [log])
-        #expect(sut.loadFailed == false)
+        #expect(sut.state.logs == [log])
+        #expect(sut.state.loadFailed == false)
     }
 
     @Test func send_task_読み込みに失敗_失敗を示す() async {
@@ -26,47 +26,47 @@ struct LogListTests {
 
         await sut.send(.task)
 
-        #expect(sut.loadFailed)
+        #expect(sut.state.loadFailed)
     }
 
     @Test func send_logAdded_同じ記録は二重に足さない() async {
         let log = ReadingLog.fixture()
-        let sut = LogList(.testDependencies(), logs: [log])
+        let sut = LogList(.testDependencies(), state: .init(logs: [log]))
 
         await sut.send(.logAdded(log))
 
-        #expect(sut.logs == [log])
+        #expect(sut.state.logs == [log])
     }
 
     @Test func send_logTapped_詳しい画面を出す() async {
         let log = ReadingLog.fixture()
-        let sut = LogList(.testDependencies(), logs: [log])
+        let sut = LogList(.testDependencies(), state: .init(logs: [log]))
 
         await sut.send(.logTapped(log))
 
-        #expect(sut.detail?.log == log)
+        #expect(sut.state.detail?.state.log == log)
     }
 
     @Test func send_子のcloseButtonTapped_詳しい画面を閉じる() async throws {
         let log = ReadingLog.fixture()
-        let sut = LogList(.testDependencies(), logs: [log])
+        let sut = LogList(.testDependencies(), state: .init(logs: [log]))
         await sut.send(.logTapped(log))
-        let detail = try #require(sut.detail)
+        let detail = try #require(sut.state.detail)
 
         await detail.send(.closeButtonTapped)
 
-        #expect(sut.detail == nil)
-        #expect(sut.logs == [log])
+        #expect(sut.state.detail == nil)
+        #expect(sut.state.logs == [log])
     }
 
     @Test func send_detailDismissed_詳しい画面を閉じる() async {
         let log = ReadingLog.fixture()
-        let sut = LogList(.testDependencies(), logs: [log])
+        let sut = LogList(.testDependencies(), state: .init(logs: [log]))
         await sut.send(.logTapped(log))
 
         await sut.send(.detailDismissed)
 
-        #expect(sut.detail == nil)
+        #expect(sut.state.detail == nil)
     }
 
     @Test func send_子のdeleteButtonTapped_一覧から消して閉じる() async throws {
@@ -76,15 +76,15 @@ struct LogListTests {
         }
         let first = ReadingLog.fixture(title: "一冊目")
         let second = ReadingLog.fixture(title: "二冊目")
-        let sut = LogList(.testDependencies(readingLogClient: readingLogClient), logs: [first, second])
+        let sut = LogList(.testDependencies(readingLogClient: readingLogClient), state: .init(logs: [first, second]))
         await sut.send(.logTapped(first))
-        let detail = try #require(sut.detail)
+        let detail = try #require(sut.state.detail)
 
         await detail.send(.deleteButtonTapped)
 
         #expect(deleted.values == [first.id])
-        #expect(sut.logs == [second])
-        #expect(sut.detail == nil)
+        #expect(sut.state.logs == [second])
+        #expect(sut.state.detail == nil)
     }
 
     @Test func send_子のdeleteButtonTapped_削除に失敗_開いたまま失敗を示す() async throws {
@@ -92,14 +92,14 @@ struct LogListTests {
             $0.delete = { _ in throw TestError() }
         }
         let log = ReadingLog.fixture()
-        let sut = LogList(.testDependencies(readingLogClient: readingLogClient), logs: [log])
+        let sut = LogList(.testDependencies(readingLogClient: readingLogClient), state: .init(logs: [log]))
         await sut.send(.logTapped(log))
-        let detail = try #require(sut.detail)
+        let detail = try #require(sut.state.detail)
 
         await detail.send(.deleteButtonTapped)
 
-        #expect(sut.detail === detail)
-        #expect(detail.deleteFailed)
-        #expect(sut.logs == [log])
+        #expect(sut.state.detail === detail)
+        #expect(detail.state.deleteFailed)
+        #expect(sut.state.logs == [log])
     }
 }

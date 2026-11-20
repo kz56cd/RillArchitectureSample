@@ -9,7 +9,7 @@ struct ComposableTests {
 
         await sut.send(.incrementButtonTapped)
 
-        #expect(sut.count == 1)
+        #expect(sut.state.count == 1)
         #expect(sut.events.values == [
             .reduce(.incrementButtonTapped),
             .parent(.incrementButtonTapped)
@@ -20,7 +20,7 @@ struct ComposableTests {
         let countSeenByParent = Recorder<Int>()
         weak var weakSUT: Counter?
         let sut = Counter(action: { _ in
-            if let count = weakSUT?.count {
+            if let count = weakSUT?.state.count {
                 countSeenByParent.record(count)
             }
         })
@@ -36,7 +36,7 @@ struct ComposableTests {
 
         await sut.send(.slowIncrementButtonTapped)
 
-        #expect(sut.count == 1)
+        #expect(sut.state.count == 1)
         #expect(sut.events.values.last == .parent(.slowIncrementButtonTapped))
     }
 
@@ -45,7 +45,7 @@ struct ComposableTests {
 
         await sut.send(.loadButtonTapped)
 
-        #expect(sut.count == 42)
+        #expect(sut.state.count == 42)
         #expect(sut.events.values == [
             .reduce(.loadButtonTapped),
             .reduce(.loadResponse(42)),
@@ -72,7 +72,7 @@ struct ComposableTests {
         await child.send(.incrementButtonTapped)
         await child.send(.incrementButtonTapped)
 
-        #expect(child.count == 2)
-        #expect(parent.count == 2)
+        #expect(child.state.count == 2)
+        #expect(parent.state.count == 2)
     }
 }

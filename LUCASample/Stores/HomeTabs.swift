@@ -8,10 +8,14 @@ import Observation
 @Observable
 final class HomeTabs: Composable {
 
+    struct State {
+        let newLog: NewLog
+        let logList: LogList
+    }
+
     // MARK: State
 
-    let newLog: NewLog
-    let logList: LogList
+    private(set) var state: State
 
     // MARK: Properties
 
@@ -22,8 +26,10 @@ final class HomeTabs: Composable {
     init(_ appDependencies: AppDependencies, action: @escaping (Action) async -> Void = { _ in }) {
         // self を捕まえる方法は AppRoot の init と同じ。
         weak var parent: HomeTabs?
-        newLog = NewLog(appDependencies, action: { await parent?.send(.newLog($0)) })
-        logList = LogList(appDependencies, action: { await parent?.send(.logList($0)) })
+        state = State(
+            newLog: NewLog(appDependencies, action: { await parent?.send(.newLog($0)) }),
+            logList: LogList(appDependencies, action: { await parent?.send(.logList($0)) })
+        )
         self.action = action
         parent = self
     }
@@ -34,7 +40,7 @@ final class HomeTabs: Composable {
         switch action {
         case let .newLog(.form(.saveResponse(.success(saved)))):
             // 兄弟への連携。記録する画面の状態には触らず、一覧へ Action を送る。
-            await logList.send(.logAdded(saved))
+            await state.logList.send(.logAdded(saved))
 
         case .signOutButtonTapped:
             // 画面の切り替えは親(AppRoot)が行う。

@@ -5,14 +5,23 @@ import Observation
 @Observable
 final class LogForm: Composable {
 
+    struct State {
+        var draft = ReadingLogDraft()
+        var invalidFields: Set<ReadingLogField> = []
+        var isSaving = false
+        var saveFailed = false
+    }
+
     // MARK: State
+
+    private(set) var state: State
 
     /// 入力欄の値。`TextField` は同期で書き換える必要があるので、例外として View から直接束縛させる。
     /// 値を使う判断(確かめる、保存する)は `saveButtonTapped` の中で行う。
-    var draft: ReadingLogDraft
-    private(set) var invalidFields: Set<ReadingLogField>
-    private(set) var isSaving: Bool
-    private(set) var saveFailed: Bool
+    var draft: ReadingLogDraft {
+        get { state.draft }
+        set { state.draft = newValue }
+    }
 
     // MARK: Properties
 
@@ -21,18 +30,8 @@ final class LogForm: Composable {
 
     // MARK: Initializers
 
-    init(
-        _ appDependencies: AppDependencies,
-        draft: ReadingLogDraft = ReadingLogDraft(),
-        invalidFields: Set<ReadingLogField> = [],
-        isSaving: Bool = false,
-        saveFailed: Bool = false,
-        action: @escaping (Action) async -> Void = { _ in }
-    ) {
-        self.draft = draft
-        self.invalidFields = invalidFields
-        self.isSaving = isSaving
-        self.saveFailed = saveFailed
+    init(_ appDependencies: AppDependencies, state: State = State(), action: @escaping (Action) async -> Void = { _ in }) {
+        self.state = state
         readingLogClient = appDependencies.readingLogClient
         self.action = action
     }
@@ -42,13 +41,13 @@ final class LogForm: Composable {
     func reduce(_ action: Action) async {
         switch action {
         case .saveButtonTapped:
-            switch draft.validate() {
+            switch state.draft.validate() {
             case let .invalid(fields):
-                invalidFields = fields
+                state.invalidFields = fields
             case let .valid(input):
-                invalidFields = []
-                isSaving = true
-                saveFailed = false
+                state.invalidFields = []
+                state.isSaving = true
+                state.saveFailed = false
                 do {
                     let saved = try await readingLogClient.save(input)
                     await send(.saveResponse(.success(saved)))
@@ -59,11 +58,11 @@ final class LogForm: Composable {
 
         case .saveResponse(.success):
             // 保存したあとの画面への切り替えは親(NewLog)が行う。
-            isSaving = false
+            state.isSaving = false
 
         case .saveResponse(.failure):
-            isSaving = false
-            saveFailed = true
+            state.isSaving = false
+            state.saveFailed = true
         }
     }
 

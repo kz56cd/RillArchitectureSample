@@ -10,7 +10,7 @@ struct AppRootView: View {
     // MARK: Content Properties
 
     var body: some View {
-        switch store.screen {
+        switch store.state.screen {
         case let .login(login):
             LoginView(store: login)
         case let .main(homeTabs):

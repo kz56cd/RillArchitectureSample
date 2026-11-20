@@ -5,11 +5,15 @@ import Observation
 @Observable
 final class LogDetail: Composable, Identifiable {
 
+    struct State {
+        let log: ReadingLog
+        var isDeleting = false
+        var deleteFailed = false
+    }
+
     // MARK: State
 
-    let log: ReadingLog
-    private(set) var isDeleting: Bool
-    private(set) var deleteFailed: Bool
+    private(set) var state: State
 
     // MARK: Properties
 
@@ -18,16 +22,8 @@ final class LogDetail: Composable, Identifiable {
 
     // MARK: Initializers
 
-    init(
-        _ appDependencies: AppDependencies,
-        log: ReadingLog,
-        isDeleting: Bool = false,
-        deleteFailed: Bool = false,
-        action: @escaping (Action) async -> Void = { _ in }
-    ) {
-        self.log = log
-        self.isDeleting = isDeleting
-        self.deleteFailed = deleteFailed
+    init(_ appDependencies: AppDependencies, state: State, action: @escaping (Action) async -> Void = { _ in }) {
+        self.state = state
         readingLogClient = appDependencies.readingLogClient
         self.action = action
     }
@@ -41,22 +37,22 @@ final class LogDetail: Composable, Identifiable {
             break
 
         case .deleteButtonTapped:
-            isDeleting = true
-            deleteFailed = false
+            state.isDeleting = true
+            state.deleteFailed = false
             do {
-                try await readingLogClient.delete(log.id)
-                await send(.deleteResponse(.success(log.id)))
+                try await readingLogClient.delete(state.log.id)
+                await send(.deleteResponse(.success(state.log.id)))
             } catch {
                 await send(.deleteResponse(.failure(error)))
             }
 
         case .deleteResponse(.success):
             // 一覧から消して閉じるのは親(LogList)が行う。
-            isDeleting = false
+            state.isDeleting = false
 
         case .deleteResponse(.failure):
-            isDeleting = false
-            deleteFailed = true
+            state.isDeleting = false
+            state.deleteFailed = true
         }
     }
 

@@ -18,15 +18,15 @@ struct LogFormTests {
         }
         let sut = LogForm(
             .testDependencies(readingLogClient: readingLogClient),
-            draft: ReadingLogDraft(title: "見本の本", pages: "120", rating: ""),
+            state: .init(draft: ReadingLogDraft(title: "見本の本", pages: "120", rating: "")),
             action: { parent.record($0) }
         )
 
         await sut.send(.saveButtonTapped)
 
         #expect(saved.values == [ReadingLogInput(title: "見本の本", pages: 120, rating: nil)])
-        #expect(sut.invalidFields.isEmpty)
-        #expect(sut.isSaving == false)
+        #expect(sut.state.invalidFields.isEmpty)
+        #expect(sut.state.isSaving == false)
         // 子は自分の状態を確定してから親へ伝える。保存の結果が先に、押した操作があとに届く。
         let actions = parent.values
         try #require(actions.count == 2)
@@ -46,13 +46,13 @@ struct LogFormTests {
         }
         let sut = LogForm(
             .testDependencies(readingLogClient: readingLogClient),
-            draft: ReadingLogDraft(title: " ", pages: "0", rating: "3")
+            state: .init(draft: ReadingLogDraft(title: " ", pages: "0", rating: "3"))
         )
 
         await sut.send(.saveButtonTapped)
 
         #expect(saved.values.isEmpty)
-        #expect(sut.invalidFields == [.title, .pages])
+        #expect(sut.state.invalidFields == [.title, .pages])
     }
 
     @Test func send_saveButtonTapped_保存に失敗_失敗を示す() async {
@@ -61,12 +61,12 @@ struct LogFormTests {
         }
         let sut = LogForm(
             .testDependencies(readingLogClient: readingLogClient),
-            draft: ReadingLogDraft(title: "見本の本", pages: "120", rating: "")
+            state: .init(draft: ReadingLogDraft(title: "見本の本", pages: "120", rating: ""))
         )
 
         await sut.send(.saveButtonTapped)
 
-        #expect(sut.saveFailed)
-        #expect(sut.isSaving == false)
+        #expect(sut.state.saveFailed)
+        #expect(sut.state.isSaving == false)
     }
 }

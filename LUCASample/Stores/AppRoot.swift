@@ -8,6 +8,10 @@ import Observation
 @Observable
 final class AppRoot: Composable {
 
+    struct State {
+        var screen: Screen
+    }
+
     enum Screen {
         case login(Login)
         case main(HomeTabs)
@@ -15,7 +19,7 @@ final class AppRoot: Composable {
 
     // MARK: State
 
-    private(set) var screen: Screen
+    private(set) var state: State
 
     // MARK: Properties
 
@@ -28,7 +32,7 @@ final class AppRoot: Composable {
         // 子へ渡すクロージャは self を使うが、init が終わるまで self を捕まえられない。
         // 弱参照の変数を先に捕まえておき、最後に self を入れる。
         weak var parent: AppRoot?
-        screen = .login(Login(appDependencies, action: { await parent?.send(.login($0)) }))
+        state = State(screen: .login(Login(appDependencies, action: { await parent?.send(.login($0)) })))
         self.appDependencies = appDependencies
         self.action = action
         parent = self
@@ -39,10 +43,10 @@ final class AppRoot: Composable {
     func reduce(_ action: Action) async {
         switch action {
         case .login(.signInResponse(.success)):
-            screen = .main(HomeTabs(appDependencies, action: { [weak self] in await self?.send(.main($0)) }))
+            state.screen = .main(HomeTabs(appDependencies, action: { [weak self] in await self?.send(.main($0)) }))
 
         case .main(.signOutButtonTapped):
-            screen = .login(Login(appDependencies, action: { [weak self] in await self?.send(.login($0)) }))
+            state.screen = .login(Login(appDependencies, action: { [weak self] in await self?.send(.login($0)) }))
 
         case .login, .main:
             break

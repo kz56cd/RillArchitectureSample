@@ -1,4 +1,5 @@
 import Architecture
+import Foundation
 @testable import LUCASample
 import Testing
 
@@ -28,7 +29,7 @@ struct AppRootTests {
         await login.send(.loginButtonTapped)
 
         #expect(sut.login === login)
-        #expect(login.errorMessage == "ログインできませんでした")
+        #expect(login.state.errorMessage == "ログインできませんでした")
     }
 
     @Test func send_ユーザーIDが空_ログインしない() async throws {
@@ -44,7 +45,7 @@ struct AppRootTests {
 
         #expect(called.values.isEmpty)
         #expect(sut.login === login)
-        #expect(login.errorMessage == "ユーザー ID を入力してください")
+        #expect(login.state.errorMessage == "ユーザー ID を入力してください")
     }
 
     @Test func send_ログインから記録とログアウトまで通す() async throws {
@@ -54,14 +55,62 @@ struct AppRootTests {
         await login.send(.loginButtonTapped)
         let homeTabs = try #require(sut.homeTabs)
 
-        let form = try #require(homeTabs.newLog.form)
+        let form = try #require(homeTabs.state.newLog.form)
         form.draft = ReadingLogDraft(title: "見本の本", pages: "120", rating: "")
         await form.send(.saveButtonTapped)
-        #expect(homeTabs.logList.logs.count == 1)
+        #expect(homeTabs.state.logList.state.logs.count == 1)
 
         await homeTabs.send(.signOutButtonTapped)
         let newLogin = try #require(sut.login)
         #expect(newLogin !== login)
         #expect(newLogin.userID.isEmpty)
+    }
+
+    @Test func prettyState_アプリ全体の状態を1つの木で出す() async throws {
+        let id = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
+        let readingLogClient = testDependency(of: ReadingLogClient.self) {
+            $0.save = { ReadingLog(id: id, input: $0, loggedAt: .distantPast) }
+        }
+        let sut = AppRoot(.testDependencies(readingLogClient: readingLogClient))
+        let login = try #require(sut.login)
+        login.userID = "user"
+        await login.send(.loginButtonTapped)
+        let form = try #require(sut.homeTabs?.state.newLog.form)
+        form.draft = ReadingLogDraft(title: "見本の本", pages: "120", rating: "")
+
+        await form.send(.saveButtonTapped)
+
+        #expect(sut.prettyState == """
+            AppRoot.State(
+              screen: .main(
+                HomeTabs.State(
+                  newLog: NewLog.State(
+                    phase: .saved(
+                      ReadingLog(
+                        id: 00000000-0000-0000-0000-000000000001,
+                        title: "見本の本",
+                        pages: 120,
+                        rating: nil,
+                        loggedAt: 0001-01-01 00:00:00 +0000
+                      )
+                    )
+                  ),
+                  logList: LogList.State(
+                    logs: [
+                      ReadingLog(
+                        id: 00000000-0000-0000-0000-000000000001,
+                        title: "見本の本",
+                        pages: 120,
+                        rating: nil,
+                        loggedAt: 0001-01-01 00:00:00 +0000
+                      )
+                    ],
+                    detail: nil,
+                    loadFailed: false
+                  )
+                )
+              )
+            )
+            """)
     }
 }

@@ -8,13 +8,13 @@ struct HomeTabsTests {
 
     @Test func send_記録する画面で保存_一覧に足される() async throws {
         let sut = HomeTabs(.testDependencies())
-        let form = try #require(sut.newLog.form)
+        let form = try #require(sut.state.newLog.form)
         form.draft = ReadingLogDraft(title: "見本の本", pages: "120", rating: "")
 
         await form.send(.saveButtonTapped)
 
-        let saved = try #require(sut.newLog.saved)
-        #expect(sut.logList.logs == [saved])
+        let saved = try #require(sut.state.newLog.saved)
+        #expect(sut.state.logList.state.logs == [saved])
     }
 
     @Test func send_signOutButtonTapped_親へ伝える() async throws {

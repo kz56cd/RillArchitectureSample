@@ -8,6 +8,10 @@ import Observation
 @Observable
 final class NewLog: Composable {
 
+    struct State {
+        var phase: Phase
+    }
+
     enum Phase {
         case editing(LogForm)
         case saved(ReadingLog)
@@ -15,7 +19,7 @@ final class NewLog: Composable {
 
     // MARK: State
 
-    private(set) var phase: Phase
+    private(set) var state: State
 
     // MARK: Properties
 
@@ -27,7 +31,7 @@ final class NewLog: Composable {
     init(_ appDependencies: AppDependencies, action: @escaping (Action) async -> Void = { _ in }) {
         // self を捕まえる方法は AppRoot の init と同じ。
         weak var parent: NewLog?
-        phase = .editing(LogForm(appDependencies, action: { await parent?.send(.form($0)) }))
+        state = State(phase: .editing(LogForm(appDependencies, action: { await parent?.send(.form($0)) })))
         self.appDependencies = appDependencies
         self.action = action
         parent = self
@@ -38,10 +42,10 @@ final class NewLog: Composable {
     func reduce(_ action: Action) async {
         switch action {
         case .writeAnotherButtonTapped:
-            phase = .editing(LogForm(appDependencies, action: { [weak self] in await self?.send(.form($0)) }))
+            state.phase = .editing(LogForm(appDependencies, action: { [weak self] in await self?.send(.form($0)) }))
 
         case let .form(.saveResponse(.success(saved))):
-            phase = .saved(saved)
+            state.phase = .saved(saved)
 
         case .form:
             break

@@ -13,7 +13,7 @@ struct NewLogView: View {
 
     var body: some View {
         Group {
-            switch store.phase {
+            switch store.state.phase {
             case let .editing(form):
                 LogFormView(store: form)
             case let .saved(log):
@@ -52,10 +52,10 @@ struct LogFormView: View {
                 field("評価(1〜5・任意)", text: $store.draft.rating, field: .rating)
                     .keyboardType(.numberPad)
             } footer: {
-                if !store.invalidFields.isEmpty {
+                if !store.state.invalidFields.isEmpty {
                     Text("赤い欄を確かめてください。書名は 50 文字まで、ページ数は 1〜2000 です。")
                         .foregroundStyle(.red)
-                } else if store.saveFailed {
+                } else if store.state.saveFailed {
                     Text("保存できませんでした。")
                         .foregroundStyle(.red)
                 }
@@ -64,14 +64,14 @@ struct LogFormView: View {
                 Button("保存する") {
                     Task { await store.send(.saveButtonTapped) }
                 }
-                .disabled(store.isSaving)
+                .disabled(store.state.isSaving)
             }
         }
     }
 
     private func field(_ title: String, text: Binding<String>, field: ReadingLogField) -> some View {
         TextField(title, text: text)
-            .foregroundStyle(store.invalidFields.contains(field) ? .red : .primary)
+            .foregroundStyle(store.state.invalidFields.contains(field) ? .red : .primary)
     }
 }
 

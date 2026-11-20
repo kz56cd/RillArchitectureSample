@@ -21,6 +21,11 @@ final class Recorder<Value> {
 @Observable
 final class Counter: Composable {
 
+    struct State {
+        var count = 0
+        var child: Counter?
+    }
+
     enum Event: Equatable {
         case reduce(Action)
         case parent(Action)
@@ -28,8 +33,7 @@ final class Counter: Composable {
 
     // MARK: State
 
-    private(set) var count: Int
-    private(set) var child: Counter?
+    private(set) var state: State
 
     // MARK: Properties
 
@@ -38,8 +42,8 @@ final class Counter: Composable {
 
     // MARK: Initializers
 
-    init(count: Int = 0, events: Recorder<Event> = Recorder(), action: @escaping (Action) async -> Void = { _ in }) {
-        self.count = count
+    init(state: State = State(), events: Recorder<Event> = Recorder(), action: @escaping (Action) async -> Void = { _ in }) {
+        self.state = state
         self.events = events
         self.action = { value in
             events.record(.parent(value))
@@ -53,26 +57,26 @@ final class Counter: Composable {
         events.record(.reduce(action))
         switch action {
         case .incrementButtonTapped:
-            count += 1
+            state.count += 1
 
         case .slowIncrementButtonTapped:
             // reduce の途中で待っても、send は終わりまで待つ。
             await Task.yield()
             try? await Task.sleep(for: .milliseconds(10))
-            count += 1
+            state.count += 1
 
         case .loadButtonTapped:
             // reduce の中から send すると、結果が先に親へ届く。
             await send(.loadResponse(42))
 
         case let .loadResponse(value):
-            count = value
+            state.count = value
 
         case .openChildButtonTapped:
-            child = Counter()
+            state.child = Counter()
 
         case .childDismissed:
-            child = nil
+            state.child = nil
         }
     }
 
@@ -89,8 +93,11 @@ final class Counter: Composable {
 /// `reduce` を書かないストア。既定の `reduce` が使われる
 final class Relay: Composable {
 
+    struct State {}
+
     // MARK: Properties
 
+    let state = State()
     let action: (Action) async -> Void
 
     // MARK: Initializers

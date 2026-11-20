@@ -7,11 +7,15 @@ import Observation
 @Observable
 final class LogList: Composable {
 
+    struct State {
+        var logs: [ReadingLog] = []
+        var detail: LogDetail?
+        var loadFailed = false
+    }
+
     // MARK: State
 
-    private(set) var logs: [ReadingLog]
-    private(set) var detail: LogDetail?
-    private(set) var loadFailed: Bool
+    private(set) var state: State
 
     // MARK: Properties
 
@@ -20,15 +24,8 @@ final class LogList: Composable {
 
     // MARK: Initializers
 
-    init(
-        _ appDependencies: AppDependencies,
-        logs: [ReadingLog] = [],
-        loadFailed: Bool = false,
-        action: @escaping (Action) async -> Void = { _ in }
-    ) {
-        self.logs = logs
-        detail = nil
-        self.loadFailed = loadFailed
+    init(_ appDependencies: AppDependencies, state: State = State(), action: @escaping (Action) async -> Void = { _ in }) {
+        self.state = state
         self.appDependencies = appDependencies
         self.action = action
     }
@@ -46,27 +43,27 @@ final class LogList: Composable {
             }
 
         case let .fetchResponse(.success(logs)):
-            self.logs = logs
-            loadFailed = false
+            state.logs = logs
+            state.loadFailed = false
 
         case .fetchResponse(.failure):
-            loadFailed = true
+            state.loadFailed = true
 
         case let .logAdded(log):
-            guard !logs.contains(where: { $0.id == log.id }) else {
+            guard !state.logs.contains(where: { $0.id == log.id }) else {
                 return
             }
-            logs.insert(log, at: 0)
+            state.logs.insert(log, at: 0)
 
         case let .logTapped(log):
-            detail = LogDetail(appDependencies, log: log, action: { [weak self] in await self?.send(.detail($0)) })
+            state.detail = LogDetail(appDependencies, state: .init(log: log), action: { [weak self] in await self?.send(.detail($0)) })
 
         case .detailDismissed, .detail(.closeButtonTapped):
-            detail = nil
+            state.detail = nil
 
         case let .detail(.deleteResponse(.success(id))):
-            logs.removeAll { $0.id == id }
-            detail = nil
+            state.logs.removeAll { $0.id == id }
+            state.detail = nil
 
         case .detail:
             break

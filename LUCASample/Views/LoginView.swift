@@ -18,7 +18,7 @@ struct LoginView: View {
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
                 } footer: {
-                    if let errorMessage = store.errorMessage {
+                    if let errorMessage = store.state.errorMessage {
                         Text(errorMessage)
                             .foregroundStyle(.red)
                     } else {
@@ -29,7 +29,7 @@ struct LoginView: View {
                     Button("ログイン") {
                         Task { await store.send(.loginButtonTapped) }
                     }
-                    .disabled(store.isSigningIn)
+                    .disabled(store.state.isSigningIn)
                 }
             }
             .navigationTitle("ログイン")

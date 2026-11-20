@@ -13,13 +13,13 @@ struct HomeTabsView: View {
         TabView {
             Tab("記録する", systemImage: "square.and.pencil") {
                 NavigationStack {
-                    NewLogView(store: store.newLog)
+                    NewLogView(store: store.state.newLog)
                         .toolbar { signOutButton }
                 }
             }
             Tab("一覧", systemImage: "books.vertical") {
                 NavigationStack {
-                    LogListView(store: store.logList)
+                    LogListView(store: store.state.logList)
                         .toolbar { signOutButton }
                 }
             }

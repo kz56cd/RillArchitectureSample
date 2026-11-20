@@ -36,25 +36,25 @@ nonisolated extension ReadingLog {
 extension NewLog {
     /// 入力中の子のストア。保存したあとなら nil
     var form: LogForm? {
-        guard case let .editing(form) = phase else { return nil }
+        guard case let .editing(form) = state.phase else { return nil }
         return form
     }
 
     /// 保存したあとの記録。入力中なら nil
     var saved: ReadingLog? {
-        guard case let .saved(log) = phase else { return nil }
+        guard case let .saved(log) = state.phase else { return nil }
         return log
     }
 }
 
 extension AppRoot {
     var login: Login? {
-        guard case let .login(login) = screen else { return nil }
+        guard case let .login(login) = state.screen else { return nil }
         return login
     }
 
     var homeTabs: HomeTabs? {
-        guard case let .main(homeTabs) = screen else { return nil }
+        guard case let .main(homeTabs) = state.screen else { return nil }
         return homeTabs
     }
 }
