@@ -23,10 +23,14 @@ LUCAのうち `Composable` だけを抜き出し、決まりを 4 つ足した�
 ```sh
 make generate              # project.yml から RillArchitectureSample.xcodeproj を作る(XcodeGen は mint で入れる)
 make test                  # アプリのストアと Rill パッケージのテスト(Swift Testing、シミュレーター)
-make test-rill             # Rill パッケージのテストだけ(swift test、macOS で手早く)
+make test-rill             # Rill パッケージのテストだけ(swift test、macOS で手早く)。多言語化する設定としない設定の両方
 make check-unidirectional  # 単一方向を破る書き方が、コンパイルエラーになることを確かめる
-make check                 # 上の 2 つ
+make check-localization    # 多言語化する設定(trait なし)でも、アプリのソースが組めることを確かめる
+make check                 # 上のすべて
 ```
+
+見本のアプリは日本語だけなので、多言語化しない設定(Rill パッケージの trait `NoLocalization`)で動かしている
+([画面に出す文言](docs/text.md) の「多言語化しないアプリ」)。多言語化する設定で作るときは、`make generate RILL_TRAITS=` と trait を空にする。
 
 `RillArchitectureSample.xcodeproj` を開いて実行すると、ログイン → 記録する → 一覧を触れる。
 保存先はメモリの中だけなので、アプリを終えると記録は消える。ユーザー ID に `error` と入れるとログインに失敗する。

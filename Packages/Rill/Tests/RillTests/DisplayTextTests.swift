@@ -3,6 +3,10 @@ import SwiftUI
 import Testing
 @testable import Rill
 
+// 多言語化するアプリ(trait `NoLocalization` が無いとき)の `DisplayText`。
+// 多言語化しないアプリのテストは `DisplayTextNoLocalizationTests` にある。
+#if !NoLocalization
+
 /// 画面に出す文言(`DisplayText`)のテスト
 ///
 /// 書き方によって、訳すかそのまま出すかが決まることを確かめる。
@@ -84,3 +88,5 @@ struct DisplayTextTests {
         #expect(AlertButton<Counter.Action>("キャンセル").title == "キャンセル")
     }
 }
+
+#endif

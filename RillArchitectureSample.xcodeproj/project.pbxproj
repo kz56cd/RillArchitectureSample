@@ -570,6 +570,9 @@
 		0F94F328DCC3DF2C39F903AC /* XCLocalSwiftPackageReference "Packages/Rill" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/Rill;
+			traits = (
+				NoLocalization,
+			);
 		};
 /* End XCLocalSwiftPackageReference section */
 
