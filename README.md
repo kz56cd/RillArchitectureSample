@@ -25,12 +25,12 @@ make generate              # project.yml から RillArchitectureSample.xcodeproj
 make test                  # アプリのストアと Rill パッケージのテスト(Swift Testing、シミュレーター)
 make test-rill             # Rill パッケージのテストだけ(swift test、macOS で手早く)。多言語化する設定としない設定の両方
 make check-unidirectional  # 単一方向を破る書き方が、コンパイルエラーになることを確かめる
-make check-no-localization # 多言語化しない設定(trait NoLocalization)でも、アプリのソースが組めることを確かめる
+make check-localization    # 多言語化する設定(trait なし)でも、アプリのソースが組めることを確かめる
 make check                 # 上のすべて
 ```
 
-多言語化しないアプリとして作るときは、`make generate RILL_TRAITS=NoLocalization` で、Rill パッケージの trait を選ぶ
-([画面に出す文言](docs/text.md) の「多言語化しないアプリ」)。見本のアプリは、多言語化する設定(既定)で動かしている。
+見本のアプリは日本語だけなので、多言語化しない設定(Rill パッケージの trait `NoLocalization`)で動かしている
+([画面に出す文言](docs/text.md) の「多言語化しないアプリ」)。多言語化する設定で作るときは、`make generate RILL_TRAITS=` と trait を空にする。
 
 `RillArchitectureSample.xcodeproj` を開いて実行すると、ログイン → 記録する → 一覧を触れる。
 保存先はメモリの中だけなので、アプリを終えると記録は消える。ユーザー ID に `error` と入れるとログインに失敗する。

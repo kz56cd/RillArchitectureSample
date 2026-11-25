@@ -1,9 +1,9 @@
 XCODEGEN := mint run yonaskolb/XcodeGen@8d3d3476a69ae3e5d68e1adccc701c410c05eb36
 DESTINATION ?= platform=iOS Simulator,name=iPhone 17
-# Rill パッケージの trait。多言語化しないアプリなら NoLocalization(例: make build RILL_TRAITS=NoLocalization)
-RILL_TRAITS ?=
+# Rill パッケージの trait。見本のアプリは日本語だけなので NoLocalization。多言語化する設定で作るなら RILL_TRAITS= と空にする
+RILL_TRAITS ?= NoLocalization
 
-.PHONY: generate build test test-rill check-unidirectional check-no-localization check
+.PHONY: generate build test test-rill check-unidirectional check-localization check
 
 ## Xcode のプロジェクトを project.yml から作る
 generate:
@@ -27,9 +27,9 @@ test-rill:
 check-unidirectional:
 	./Checks/check-unidirectional.sh
 
-## 多言語化しない設定(trait NoLocalization)でも、アプリのソースが組めることを確かめる
-check-no-localization:
-	./Checks/check-no-localization.sh
+## 多言語化する設定(trait なし)でも、アプリのソースが組めることを確かめる
+check-localization:
+	./Checks/check-localization.sh
 
 ## すべて確かめる
-check: test test-rill check-unidirectional check-no-localization
+check: test test-rill check-unidirectional check-localization

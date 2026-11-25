@@ -109,16 +109,19 @@ Text(title)                        // SwiftUI の Text(String) がそのまま�
 | 使い方 | 選び方 |
 |---|---|
 | Swift Package Manager | 依存に `.package(path: "...", traits: ["NoLocalization"])` と書く。`swift test --traits NoLocalization` |
-| Xcode のプロジェクト | パッケージの参照に `traits = (NoLocalization,);` を持たせる。XcodeGen は書き出せないので、この見本では `make generate RILL_TRAITS=NoLocalization` が `Scripts/apply-rill-traits.sh` で書き足す |
+| Xcode のプロジェクト | パッケージの参照に `traits = (NoLocalization,);` を持たせる。XcodeGen は書き出せないので、この見本では `make generate` が `Scripts/apply-rill-traits.sh` で書き足す(`RILL_TRAITS` で選ぶ。既定は `NoLocalization`) |
 
 ### あとで多言語化するとき
 
 trait を外す。`String` として使っていた所(`count`、`+`、変数をそのまま入れる所など)がコンパイルエラーになるので、直す所が分かる。
 逆に、多言語化するアプリから trait を選んだときは、`DisplayText` 特有の書き方(`.resolve()`、`.localized`、`.verbatim`)がエラーになる。
-見本のアプリのテストは、多言語化する設定で書いている(`.resolve()` を使う所がある)。
+見本のアプリは日本語だけなので、この設定で動かしている。アプリのソースはどちらの設定でも組めるが、
+アプリのテストは `DisplayText` を `String` として比べている。多言語化する設定に変えると、本の名前を埋め込んだタイトルを比べる所が
+(キーが `「%@」を削除しますか?` になるので)テストの失敗になり、`resolve()` で比べるよう直す所になる。
 
 ### 確かめていること
 
 - `make test-rill`:Rill パッケージのテストを、両方の設定で流す(多言語化しない設定のテストは `DisplayTextNoLocalizationTests`)
-- `make check-no-localization`:trait を有効にした Rill で、アプリのソースが組めることを型検査で確かめる
-- Xcode のプロジェクトでパッケージの参照に `traits` を書き足すと trait が効き、見本のアプリと Rill のテスト、UI テスト(アラート、確認ダイアログ、push、ディープリンク、通知)が、多言語化しない設定でもシミュレーターで通ることを確かめた(アプリのテストのうち `.resolve()` を使う 1 行は外した)
+- `make test`:見本のアプリと Rill のテストを、多言語化しない設定でシミュレーターで流す
+- `make check-localization`:trait を外した Rill で、アプリのソースが組めることを型検査で確かめる
+- UI テスト(アラート、確認ダイアログ、push、ディープリンク、通知)が、多言語化しない設定でもシミュレーターで通ることを確かめた(この UI テストはリポジトリに含めていない)
