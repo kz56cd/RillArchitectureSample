@@ -4,7 +4,7 @@
 
 ## 1. 状態管理がアーキテクチャとして組み込まれている
 
-- 画面に出す文言を状態に持つときは、`String` ではなく `DisplayText` で持つ([画面に出す文言](text.md))。
+- 画面に出す文言を状態に持つときは、`DisplayText` で持つ([画面に出す文言](text.md))。多言語化しないアプリでは、trait `NoLocalization` を選ぶと `DisplayText` が `String` そのものになる。
 - 画面の状態は、すべてストア(`Stores/`)の `State` の構造体にまとめ、`private(set) var state` で持つ。
   View は状態を持たない(`@State` はアプリの一番上の `AppRoot` だけ)。
 - `Composable` が `State` と `state` を要件にしているので、どのストアも同じ形になる(`Packages/Rill/Sources/Rill/Core/Composable.swift`)。

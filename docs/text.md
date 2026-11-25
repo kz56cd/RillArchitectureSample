@@ -2,8 +2,12 @@
 
 [README に戻る](../README.md)
 
-ストアの状態に、画面に出す文言を持つときは `String` ではなく `DisplayText` で持つ。
+ストアの状態に、画面に出す文言を持つときは `DisplayText` で持つ。
 訳す文言(`LocalizedStringResource`)と、訳さずにそのまま出す文言(`String`)の両方を、1 つの型で扱える。
+
+多言語化するかどうかはアプリ全体で決める。多言語化しないアプリでは、Rill パッケージの trait `NoLocalization` を選ぶと、
+`DisplayText` が `String` そのものになり、`String` と同じように使える([多言語化しないアプリ](#多言語化しないアプリ))。
+以下の「書き分け」から「テスト」までは、多言語化するアプリ(既定)の話。
 
 ## 書き分け
 
@@ -78,3 +82,43 @@ AlertButton(bookTitle, action: .bookChosen(id))                   // そのま�
 - 本の名前を埋め込んだタイトルが、英語の訳に名前を埋めて出る(`Delete “見本の本”?`)。
 - 訳す文言は訳される。
 - `String` の変数から作った文言は、訳の表に同じキーがあっても訳されない。
+
+## 多言語化しないアプリ
+
+多言語化しないアプリでは、訳す文言とそのまま出す文言を分ける意味が無い(訳が無いので、どちらでも表示は同じ)。
+Rill パッケージの trait `NoLocalization` を選ぶと、`DisplayText` が `String` の別名(`typealias DisplayText = String`)になる。
+
+```swift
+var title: DisplayText = "「\(name)」を保存しました"
+title = name                       // 変数をそのまま入れられる
+title += "(2 冊目)"                // つなげる、数える、含むか調べる、なども String と同じ
+AlertState(title: "削除できませんでした", message: serverMessage)   // リテラルと変数を混ぜて渡せる
+Text(title)                        // SwiftUI の Text(String) がそのまま使われる
+```
+
+| | 多言語化するアプリ(既定) | 多言語化しないアプリ(`NoLocalization`) |
+|---|---|---|
+| `DisplayText` | 訳す文言とそのまま出す文言を持つ enum | `String` |
+| 変数を入れる | `DisplayText(name)` | `name` |
+| 文字列として使う | `.resolve()` してから | そのまま |
+| アラートで、タイトルはリテラル、メッセージは変数 | `DisplayText(message)` と書く | そのまま渡せる |
+| `prettyState` | 訳す文言はキー、そのまま出す文言は `verbatim("...")` | `"..."` |
+
+### trait の選び方
+
+| 使い方 | 選び方 |
+|---|---|
+| Swift Package Manager | 依存に `.package(path: "...", traits: ["NoLocalization"])` と書く。`swift test --traits NoLocalization` |
+| Xcode のプロジェクト | パッケージの参照に `traits = (NoLocalization,);` を持たせる。XcodeGen は書き出せないので、この見本では `make generate RILL_TRAITS=NoLocalization` が `Scripts/apply-rill-traits.sh` で書き足す |
+
+### あとで多言語化するとき
+
+trait を外す。`String` として使っていた所(`count`、`+`、変数をそのまま入れる所など)がコンパイルエラーになるので、直す所が分かる。
+逆に、多言語化するアプリから trait を選んだときは、`DisplayText` 特有の書き方(`.resolve()`、`.localized`、`.verbatim`)がエラーになる。
+見本のアプリのテストは、多言語化する設定で書いている(`.resolve()` を使う所がある)。
+
+### 確かめていること
+
+- `make test-rill`:Rill パッケージのテストを、両方の設定で流す(多言語化しない設定のテストは `DisplayTextNoLocalizationTests`)
+- `make check-no-localization`:trait を有効にした Rill で、アプリのソースが組めることを型検査で確かめる
+- Xcode のプロジェクトでパッケージの参照に `traits` を書き足すと trait が効き、見本のアプリと Rill のテスト、UI テスト(アラート、確認ダイアログ、push、ディープリンク、通知)が、多言語化しない設定でもシミュレーターで通ることを確かめた(アプリのテストのうち `.resolve()` を使う 1 行は外した)

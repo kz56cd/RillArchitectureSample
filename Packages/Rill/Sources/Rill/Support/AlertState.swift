@@ -35,14 +35,17 @@ nonisolated public struct AlertState<Action: Sendable>: Sendable {
         self.buttons = buttons
     }
 
+    #if !NoLocalization
     /// タイトルを、訳さずにそのまま出す。サーバーから届いた文言などに使う
     ///
     /// メッセージも `String` の変数で渡すときは、`DisplayText(message)` と書く。
     /// メッセージに文字列リテラルを書いたときに、訳さない扱いへ黙って変わらないようにするため。
+    /// (trait `NoLocalization` のときは `DisplayText` が `String` なので、この重ね書きは要らない)
     @_disfavoredOverload
     public init<S: StringProtocol>(title: S, message: DisplayText? = nil, buttons: [AlertButton<Action>] = []) {
         self.init(title: DisplayText(title), message: message, buttons: buttons)
     }
+    #endif
 }
 
 /// アラートと確認ダイアログのボタン
@@ -75,11 +78,13 @@ nonisolated public struct AlertButton<Action: Sendable>: Sendable {
         self.action = action
     }
 
+    #if !NoLocalization
     /// 文言を、訳さずにそのまま出す。データから作るボタンなどに使う
     @_disfavoredOverload
     public init<S: StringProtocol>(_ title: S, role: Role? = nil, action: Action? = nil) {
         self.init(DisplayText(title), role: role, action: action)
     }
+    #endif
 }
 
 extension AlertState: Equatable where Action: Equatable {}

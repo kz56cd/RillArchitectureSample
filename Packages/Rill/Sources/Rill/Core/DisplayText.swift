@@ -1,5 +1,18 @@
 import Foundation
 
+#if NoLocalization
+
+/// 画面に出す文言(多言語化しないアプリ)
+///
+/// trait `NoLocalization` を有効にしたアプリでは、`String` そのもの。
+/// 訳さないので、訳す文言とそのまま出す文言を分ける必要が無い。`String` と同じように使える。
+///
+/// あとで多言語化するときは trait を外す。`String` として使っていた所(`count` や `+` など)が
+/// コンパイルエラーになるので、直す所が分かる。
+public typealias DisplayText = String
+
+#else
+
 /// 画面に出す文言
 ///
 /// 訳す文言(`LocalizedStringResource`)と、訳さずにそのまま出す文言(`String`)の両方を持てる。
@@ -60,3 +73,5 @@ extension DisplayText: ExpressibleByStringInterpolation {
         self = .localized(LocalizedStringResource(stringInterpolation: stringInterpolation))
     }
 }
+
+#endif
