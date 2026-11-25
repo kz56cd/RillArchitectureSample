@@ -28,7 +28,7 @@ trap 'rm -rf "$modules"' EXIT
 swiftc_simulator -emit-module \
     -module-name Rill \
     -emit-module-path "$modules/Rill.swiftmodule" \
-    Packages/Rill/Sources/Rill/*.swift
+    Packages/Rill/Sources/Rill/*/*.swift
 
 typecheck() {
     swiftc_simulator -typecheck -module-name RillArchitectureSample -I "$modules" "$@"

@@ -6,7 +6,7 @@
 
 - 画面の状態は、すべてストア(`Stores/`)の `State` の構造体にまとめ、`private(set) var state` で持つ。
   View は状態を持たない(`@State` はアプリの一番上の `AppRoot` だけ)。
-- `Composable` が `State` と `state` を要件にしているので、どのストアも同じ形になる(`Packages/Rill/Sources/Rill/Composable.swift`)。
+- `Composable` が `State` と `state` を要件にしているので、どのストアも同じ形になる(`Packages/Rill/Sources/Rill/Core/Composable.swift`)。
 - 状態を変える入口は `send(Action)` の 1 つだけ。
 - 遷移も状態として持つ。`AppRoot.State.screen`、`NewLog.State.phase`、`LogList.State.filter`(シート)に子のストアを入れれば出て、外せば消える。
   push も同じで、`LogList.State.path` に子のストアを積めば進み、取り除けば戻る。選んでいるタブも `HomeTabs.State.selectedTab` で持つ。
@@ -127,13 +127,13 @@ Rill パッケージのテスト(`RillTests`)。アプリの型を使わず、�
 画面の遷移も、SwiftUI に状態を直接書き換えさせない(決まり 1)。
 
 - シートは `$store.state.filter` で束縛できない。代わりに `store.presentation(\.state.filter, dismiss: .filterDismissed)`
-  (`Packages/Rill/Sources/Rill/Composable+Presentation.swift`)を使い、スワイプで閉じたときも Action を通す。
+  (`Packages/Rill/Sources/Rill/Support/Composable+Presentation.swift`)を使い、スワイプで閉じたときも Action を通す。
 - push は `NavigationStack(path: $store.state.path)` で束縛できない。代わりに
-  `store.navigationPath(\.state.path, pop: { .pathPopped(count: $0) })`(`Packages/Rill/Sources/Rill/Composable+Navigation.swift`)を使い、
+  `store.navigationPath(\.state.path, pop: { .pathPopped(count: $0) })`(`Packages/Rill/Sources/Rill/Support/Composable+Navigation.swift`)を使い、
   戻るボタンや端からのスワイプで戻ったときも、残った画面の数を Action で送る。
   積むのは `reduce` の中だけ。`NavigationLink(value:)` は使わず、ボタンで Action を送る(SwiftUI が足そうとしても無視する)。
 - タブは `TabView(selection: $store.state.selectedTab)` で束縛できない。代わりに
-  `store.binding(\.state.selectedTab, send: { .tabSelected($0) })`(`Packages/Rill/Sources/Rill/Composable+Binding.swift`)を使う。
+  `store.binding(\.state.selectedTab, send: { .tabSelected($0) })`(`Packages/Rill/Sources/Rill/Support/Composable+Binding.swift`)を使う。
   `Picker` や `Toggle` など、選ぶ操作も同じ。入力欄は決まり 2 の例外のままで、`binding` は使わない。
 - ディープリンクで行き先の画面の状態を直接作れない。一番上のストアへ `.deepLinkOpened` を送る。
 - `NavigationStack` の path の要素は `Hashable` でなければならない。ストアは `IdentityHashable` に準拠させ、同じストアかどうかで比べる。

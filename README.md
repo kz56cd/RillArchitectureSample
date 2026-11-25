@@ -65,7 +65,8 @@ flowchart LR
 
 | ディレクトリ | 中身 |
 |---|---|
-| `Packages/Rill/Sources/Rill` | `Composable`(LUCA をもとに `State` を足したもの)、`DependencyClient`、`PrettyPrinter`、画面の遷移(シート、push、タブ)の Binding の補助、ディープリンクの受け口、通知を `AsyncStream` で受ける依存(`NotificationClient`) |
+| `Packages/Rill/Sources/Rill/Core` | アーキテクチャの決まりそのもの。`Composable`(LUCA をもとに `State` を足したもの)、`DependencyClient`、`PrettyPrinter` |
+| `Packages/Rill/Sources/Rill/Support` | 決まりを守ったまま使うための補助。画面の遷移(シート、push、タブ)の Binding、ディープリンクの受け口、通知を `AsyncStream` で受ける依存(`NotificationClient`) |
 | `Packages/Rill/Tests/RillTests` | パッケージのテスト |
 | `RillArchitectureSample/Dependencies` | `AppDependencies`、`AuthClient`、`ReadingLogClient`、ストアが受ける通知の名前 |
 | `RillArchitectureSample/Models` | 読書の記録と、入力の確かめ、ディープリンクの行き先(`AppLink`) |
