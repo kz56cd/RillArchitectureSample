@@ -1,3 +1,4 @@
+import Rill
 import SwiftUI
 
 @main
@@ -12,6 +13,8 @@ struct RillArchitectureSampleApp: App {
     var body: some Scene {
         WindowGroup {
             AppRootView(store: store)
+                // URL で開かれたら、行き先を一番上のストアへ Action として送る。
+                .onDeepLink(AppLink.self, to: store) { .deepLinkOpened($0) }
         }
     }
 }

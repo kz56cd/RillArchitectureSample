@@ -30,4 +30,40 @@ struct HomeTabsTests {
             return
         }
     }
+
+    @Test func send_tabSelected_タブを切り替える() async {
+        let sut = HomeTabs(.testDependencies())
+
+        await sut.send(.tabSelected(.logList))
+
+        #expect(sut.state.selectedTab == .logList)
+    }
+
+    @Test func send_deepLinkOpened_logList_一覧のタブで積んだ画面を閉じる() async {
+        let log = ReadingLog.fixture()
+        let sut = HomeTabs(.testDependencies())
+        await sut.state.logList.send(.logAdded(log))
+        await sut.state.logList.send(.logTapped(log))
+        await sut.state.logList.send(.filterButtonTapped)
+
+        await sut.send(.deepLinkOpened(.logList))
+
+        #expect(sut.state.selectedTab == .logList)
+        #expect(sut.state.logList.state.path.isEmpty)
+        #expect(sut.state.logList.state.filter == nil)
+    }
+
+    @Test func send_deepLinkOpened_newLog_記録するタブで新しく記録できる() async throws {
+        let sut = HomeTabs(.testDependencies())
+        let form = try #require(sut.state.newLog.form)
+        form.draft = ReadingLogDraft(title: "見本の本", pages: "120", rating: "")
+        await form.send(.saveButtonTapped)
+        await sut.send(.tabSelected(.logList))
+
+        await sut.send(.deepLinkOpened(.newLog))
+
+        #expect(sut.state.selectedTab == .newLog)
+        let newForm = try #require(sut.state.newLog.form)
+        #expect(newForm !== form)
+    }
 }

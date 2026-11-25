@@ -1,3 +1,4 @@
+import Foundation
 import Observation
 @testable import Rill
 
@@ -84,6 +85,9 @@ final class Counter: Composable, nonisolated IdentityHashable {
 
         case let .pathPopped(count):
             state.path.removeLast(state.path.count - count)
+
+        case let .countSelected(value):
+            state.count = value
         }
     }
 
@@ -96,6 +100,7 @@ final class Counter: Composable, nonisolated IdentityHashable {
         case childDismissed
         case pushButtonTapped
         case pathPopped(count: Int)
+        case countSelected(Int)
     }
 }
 
@@ -117,5 +122,18 @@ final class Relay: Composable {
 
     enum Action: Equatable, Sendable {
         case ping
+    }
+}
+
+/// テスト用の行き先。`counter://count/5` を `.count(5)` にする
+enum CounterLink: DeepLink, Equatable {
+    case count(Int)
+
+    init?(url: URL) {
+        guard url.scheme == "counter", url.host() == "count",
+              let value = Int(url.lastPathComponent) else {
+            return nil
+        }
+        self = .count(value)
     }
 }

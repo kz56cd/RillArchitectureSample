@@ -124,11 +124,66 @@ struct AppRootTests {
                         )
                       )
                     ],
-                    filter: nil
-                  )
+                    filter: nil,
+                    linkedLogMissing: false
+                  ),
+                  selectedTab: .newLog
                 )
-              )
+              ),
+              pendingLink: nil
             )
             """)
+    }
+
+    // MARK: ディープリンク
+
+    @Test func send_ログインしたあとにdeepLinkOpened_タブの画面へ渡す() async throws {
+        let sut = AppRoot(.testDependencies())
+        let login = try #require(sut.login)
+        login.userID = "user"
+        await login.send(.loginButtonTapped)
+        let homeTabs = try #require(sut.homeTabs)
+
+        await sut.send(.deepLinkOpened(.logList))
+
+        #expect(homeTabs.state.selectedTab == .logList)
+    }
+
+    @Test func send_ログインする前にdeepLinkOpened_覚えておきログインしてから開く() async throws {
+        let log = ReadingLog.fixture()
+        let readingLogClient = testDependency(of: ReadingLogClient.self) {
+            $0.fetchAll = { [log] }
+        }
+        let sut = AppRoot(.testDependencies(readingLogClient: readingLogClient))
+
+        await sut.send(.deepLinkOpened(.log(id: log.id)))
+
+        let login = try #require(sut.login)
+        #expect(sut.state.pendingLink == .log(id: log.id))
+
+        login.userID = "user"
+        await login.send(.loginButtonTapped)
+
+        let homeTabs = try #require(sut.homeTabs)
+        #expect(sut.state.pendingLink == nil)
+        #expect(homeTabs.state.selectedTab == .logList)
+        #expect(homeTabs.state.logList.topDetail?.state.log == log)
+    }
+
+    @Test func open_URLから一番下の画面まで開く() async throws {
+        let log = ReadingLog.fixture()
+        let readingLogClient = testDependency(of: ReadingLogClient.self) {
+            $0.fetchAll = { [log] }
+        }
+        let sut = AppRoot(.testDependencies(readingLogClient: readingLogClient))
+        let login = try #require(sut.login)
+        login.userID = "user"
+        await login.send(.loginButtonTapped)
+        let url = try #require(URL(string: "rill-sample://logs/\(log.id.uuidString)"))
+
+        let opened = await sut.open(url, as: AppLink.self) { .deepLinkOpened($0) }
+
+        #expect(opened)
+        #expect(sut.homeTabs?.state.logList.topDetail?.state.log == log)
     }
 }

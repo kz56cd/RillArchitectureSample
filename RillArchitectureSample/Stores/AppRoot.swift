@@ -5,11 +5,16 @@ import Observation
 ///
 /// ログインの画面とタブの画面を、子のストアとして持って出し分ける。
 /// 子から届いた Action(ログインできた、ログアウトを押した)を見て切り替える。
+///
+/// ディープリンクは、まずここに届く。ログインしていれば、タブの画面へ `send` で渡す。
+/// ログインしていなければ行き先を覚えておき、ログインできたら渡す。
 @Observable
 final class AppRoot: Composable {
 
     struct State {
         var screen: Screen
+        /// ログインする前に開かれたディープリンク。ログインできたら開く
+        var pendingLink: AppLink?
     }
 
     enum Screen {
@@ -42,8 +47,21 @@ final class AppRoot: Composable {
 
     func reduce(_ action: Action) async {
         switch action {
+        case let .deepLinkOpened(link):
+            switch state.screen {
+            case .login:
+                state.pendingLink = link
+            case let .main(homeTabs):
+                await homeTabs.send(.deepLinkOpened(link))
+            }
+
         case .login(.signInResponse(.success)):
-            state.screen = .main(HomeTabs(appDependencies, action: { [weak self] in await self?.send(.main($0)) }))
+            let homeTabs = HomeTabs(appDependencies, action: { [weak self] in await self?.send(.main($0)) })
+            state.screen = .main(homeTabs)
+            if let link = state.pendingLink {
+                state.pendingLink = nil
+                await homeTabs.send(.deepLinkOpened(link))
+            }
 
         case .main(.signOutButtonTapped):
             state.screen = .login(Login(appDependencies, action: { [weak self] in await self?.send(.login($0)) }))
@@ -54,6 +72,8 @@ final class AppRoot: Composable {
     }
 
     enum Action: Sendable {
+        /// URL で開かれた。`onDeepLink` が送る
+        case deepLinkOpened(AppLink)
         case login(Login.Action)
         case main(HomeTabs.Action)
     }

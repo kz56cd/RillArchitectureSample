@@ -25,7 +25,7 @@ flowchart TB
         end
     end
     subgraph Package["Rill パッケージ"]
-        P["Composable / DependencyClient / PrettyPrinter<br/>testDependency / presentation / navigationPath / IdentityHashable"]
+        P["Composable / DependencyClient / PrettyPrinter<br/>testDependency / presentation / navigationPath / binding<br/>IdentityHashable / DeepLink / onDeepLink"]
     end
     Live["liveValue<br/>(本番。見本ではメモリの保存先)"]
     Test["testValue<br/>(テストで差し替える)"]
@@ -37,7 +37,7 @@ flowchart TB
     V & S & D -.-> M
     S -- "準拠する" --> P
     D -- "準拠する" --> P
-    V -- "presentation、navigationPath を使う" --> P
+    V -- "presentation、navigationPath、binding、onDeepLink を使う" --> P
 ```
 
 ## 1 つの画面の中の流れ(単一方向)
@@ -63,9 +63,9 @@ flowchart LR
 ```mermaid
 flowchart TD
     App["RillArchitectureSampleApp<br/>@State で AppRoot を持つ"] --> AppRoot
-    AppRoot["AppRoot<br/>ログインの状態で出し分ける"]
+    AppRoot["AppRoot<br/>ログインの状態で出し分ける。ディープリンクの入口"]
     AppRoot -- "screen = .login" --> Login["Login<br/>ログインする前"]
-    AppRoot -- "screen = .main" --> HomeTabs["HomeTabs<br/>兄弟の連携を中継する"]
+    AppRoot -- "screen = .main" --> HomeTabs["HomeTabs<br/>兄弟の連携を中継する。選んでいるタブを持つ"]
     HomeTabs -- "newLog" --> NewLog["NewLog<br/>入力中と保存したあとを出し分ける"]
     HomeTabs -- "logList" --> LogList["LogList<br/>記録の一覧"]
     NewLog -- "phase = .editing" --> LogForm["LogForm<br/>入力欄と保存"]
@@ -162,3 +162,7 @@ sequenceDiagram
 
 評価を選んだときや「キャンセル」のときは、子(`LogFilter`)が `send(.ratingSelected(...))` / `send(.cancelButtonTapped)` し、
 親の `LogList` が `.filter(...)` として受けて `filter = nil` にする。
+
+## ディープリンク
+
+URL も、一番上のストアへの Action として受ける。流れの図は [ディープリンク](deeplink.md) にある。

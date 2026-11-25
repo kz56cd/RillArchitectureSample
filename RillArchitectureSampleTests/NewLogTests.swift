@@ -54,4 +54,15 @@ struct NewLogTests {
 
         #expect(sut.saved?.title == "二冊目")
     }
+
+    @Test func send_linkOpened_入力中_入れた値を消さない() async throws {
+        let sut = NewLog(.testDependencies())
+        let child = try #require(sut.form)
+        child.draft = ReadingLogDraft(title: "書きかけ", pages: "", rating: "")
+
+        await sut.send(.linkOpened)
+
+        #expect(sut.form === child)
+        #expect(child.draft.title == "書きかけ")
+    }
 }

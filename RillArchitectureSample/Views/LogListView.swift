@@ -18,6 +18,10 @@ struct LogListView: View {
                 Text("読み込めませんでした。")
                     .foregroundStyle(.red)
             }
+            if store.state.linkedLogMissing {
+                Text("開こうとした記録が見つかりませんでした。")
+                    .foregroundStyle(.red)
+            }
             ForEach(store.state.visibleLogs) { log in
                 // 積むのも Action で行う。NavigationLink(value:) は使わない。
                 Button {

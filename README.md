@@ -14,7 +14,7 @@ LUCAのうち `Composable` だけを抜き出し、決まりを 4 つ足した�
 - 単一方向である
 - View 同士の連携(親子間も含む)がしやすい
 
-題材は、読んだ本を記録する小さなアプリ(ログイン、記録する、一覧、詳しい画面(push)、絞り込み(シート))。
+題材は、読んだ本を記録する小さなアプリ(ログイン、記録する、一覧、詳しい画面(push)、絞り込み(シート)、ディープリンク)。
 
 名前の Rill は「小さな流れ」のこと。状態が一方向に流れることと、中心が小さい(20 行ほどのプロトコル)ことから。
 
@@ -39,6 +39,7 @@ make check                 # 上の 2 つ
 |---|---|
 | [構造の図](docs/architecture.md) | 層と依存の向き、1 つの画面の中の流れ、画面とストアの木、親子・兄弟の連携、push と戻り方、シートの閉じ方 |
 | [4 つの条件をどこで確かめるか](docs/requirements.md) | 条件ごとの決まりと、確かめているテスト・検査。状態の pretty print |
+| [ディープリンク](docs/deeplink.md) | URL から画面を開く流れ、アーキテクチャで保証されること、テスト |
 | [UIKit で使う](docs/uikit.md) | SwiftUI との対応、書き方の例、気をつけること |
 | [ほかのアーキテクチャとの比較](docs/comparison.md) | Flux との違い、LUCA との違い |
 
@@ -63,10 +64,10 @@ flowchart LR
 
 | ディレクトリ | 中身 |
 |---|---|
-| `Packages/Rill/Sources/Rill` | `Composable`(LUCA をもとに `State` を足したもの)、`DependencyClient`、`PrettyPrinter`、画面の遷移(シート、push)の Binding の補助 |
+| `Packages/Rill/Sources/Rill` | `Composable`(LUCA をもとに `State` を足したもの)、`DependencyClient`、`PrettyPrinter`、画面の遷移(シート、push、タブ)の Binding の補助、ディープリンクの受け口 |
 | `Packages/Rill/Tests/RillTests` | パッケージのテスト |
 | `RillArchitectureSample/Dependencies` | `AppDependencies`、`AuthClient`、`ReadingLogClient` |
-| `RillArchitectureSample/Models` | 読書の記録と、入力の確かめ |
+| `RillArchitectureSample/Models` | 読書の記録と、入力の確かめ、ディープリンクの行き先(`AppLink`) |
 | `RillArchitectureSample/Stores` | 画面ごとのストア |
 | `RillArchitectureSample/Views` | 画面ごとの View |
 | `RillArchitectureSampleTests` | ストアのテスト |
@@ -82,13 +83,16 @@ flowchart LR
 決まりを破る書き方がコンパイルエラーになることは `make check-unidirectional` で確かめる。
 理由と、4 つの条件ごとの確かめ方は [4 つの条件をどこで確かめるか](docs/requirements.md) にある。
 
+ディープリンクも、この決まりの組み合わせで守られる。URL を行き先の値にして一番上のストアへ Action として送り、
+各ストアが自分の状態を変えてから子へ `send` で渡す([ディープリンク](docs/deeplink.md))。
+
 ## 気づいたこと
 
 - 子の `reduce` の中から `send` すると、親には「結果」の Action が先に、「押した」の Action があとに届く
   (`LogFormTests` の最初のテストで確かめている)。親は「押した」ではなく「結果」で判断する。
-- シートを下へのスワイプで閉じたときや、push した画面から戻ったとき、`presentation` と `navigationPath` は `Task` で Action を送るので、
+- シートを下へのスワイプで閉じたときや、push した画面から戻ったとき、タブを押したとき、`presentation`、`navigationPath`、`binding` は `Task` で Action を送るので、
   状態が変わるのは一瞬あとになる。シミュレーターで、戻ったあとに画面が積み直されたり、シートが出直したりしないことを確かめた
-  (戻るボタン、端からのスワイプ、下へのスワイプ。確かめるための UI テストはリポジトリに含めていない)。
+  (戻るボタン、端からのスワイプ、下へのスワイプ、タブ。確かめるための UI テストはリポジトリに含めていない)。
 - push する画面のストアは `Hashable` でなければならない。`IdentityHashable` に準拠させるとき、MainActor が既定のモジュールでは
   `nonisolated IdentityHashable` と書く必要がある。
 

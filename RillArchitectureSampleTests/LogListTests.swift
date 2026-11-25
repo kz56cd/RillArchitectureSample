@@ -1,3 +1,4 @@
+import Foundation
 import Rill
 @testable import RillArchitectureSample
 import Testing
@@ -142,5 +143,47 @@ struct LogListTests {
         await sut.send(.filterDismissed)
 
         #expect(sut.state.filter == nil)
+    }
+
+    // MARK: ディープリンク
+
+    @Test func send_linkOpened_読み込んでいない記録_読み込んでから詳しい画面だけを積む() async {
+        let log = ReadingLog.fixture()
+        let readingLogClient = testDependency(of: ReadingLogClient.self) {
+            $0.fetchAll = { [log] }
+        }
+        let sut = LogList(.testDependencies(readingLogClient: readingLogClient))
+
+        await sut.send(.linkOpened(logID: log.id))
+
+        #expect(sut.state.logs == [log])
+        #expect(sut.state.path.count == 1)
+        #expect(sut.topDetail?.state.log == log)
+    }
+
+    @Test func send_linkOpened_ほかの画面を開いていても_閉じてから積む() async {
+        let first = ReadingLog.fixture(title: "一冊目")
+        let second = ReadingLog.fixture(title: "二冊目")
+        let sut = LogList(.testDependencies(), state: .init(logs: [first, second]))
+        await sut.send(.logTapped(first))
+        await sut.send(.filterButtonTapped)
+
+        await sut.send(.linkOpened(logID: second.id))
+
+        #expect(sut.state.filter == nil)
+        #expect(sut.state.path.count == 1)
+        #expect(sut.topDetail?.state.log == second)
+    }
+
+    @Test func send_linkOpened_見つからない記録_一覧のまま見つからないことを示す() async {
+        let readingLogClient = testDependency(of: ReadingLogClient.self) {
+            $0.fetchAll = { [] }
+        }
+        let sut = LogList(.testDependencies(readingLogClient: readingLogClient))
+
+        await sut.send(.linkOpened(logID: UUID()))
+
+        #expect(sut.state.path.isEmpty)
+        #expect(sut.state.linkedLogMissing)
     }
 }

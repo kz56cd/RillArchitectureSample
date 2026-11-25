@@ -44,6 +44,11 @@ final class NewLog: Composable {
         case .writeAnotherButtonTapped:
             state.phase = .editing(LogForm(appDependencies, action: { [weak self] in await self?.send(.form($0)) }))
 
+        case .linkOpened:
+            // 保存したあとなら、新しく記録できるようにする。入力中なら、入れた値を消さないよう、そのままにする。
+            guard case .saved = state.phase else { return }
+            state.phase = .editing(LogForm(appDependencies, action: { [weak self] in await self?.send(.form($0)) }))
+
         case let .form(.saveResponse(.success(saved))):
             state.phase = .saved(saved)
 
@@ -54,6 +59,8 @@ final class NewLog: Composable {
 
     enum Action: Sendable {
         case writeAnotherButtonTapped
+        /// ディープリンクで開かれた。親の HomeTabs が中継して送る
+        case linkOpened
         case form(LogForm.Action)
     }
 }

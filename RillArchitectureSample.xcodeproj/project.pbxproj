@@ -26,10 +26,12 @@
 		B2614FCA2BDFDA8FB34F35C9 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E13E129999004941E1114EF /* LoginView.swift */; };
 		B2E1747356416CB60C18B1A1 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = E144C277B6A6BF1DB95D69CD /* Login.swift */; };
 		BA85DE8B24767538DC856C19 /* HomeTabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 645B00B21AFC861F6D13E488 /* HomeTabs.swift */; };
+		C6A85C312AC3FB492E83134B /* AppLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49204710E90FA904D04A751 /* AppLink.swift */; };
 		C742951FFA7CBD65DD01C36A /* LogFormTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA9CC20999D2A71803734A2 /* LogFormTests.swift */; };
 		C82409258A8AEC5D49457A86 /* LogDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F6A1AC3DE01CECAC5A276 /* LogDetail.swift */; };
 		E36DBCE78D0A5D1E6B2B4995 /* LogForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A255E690160AC43CB55E13C /* LogForm.swift */; };
 		F40066E8E1FC700B1B4377EB /* HomeTabsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F0176255498F1217C152D4 /* HomeTabsTests.swift */; };
+		F66F76B2E109D57ADE3A1B85 /* AppLinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01E4015B90877388CEC3C03 /* AppLinkTests.swift */; };
 		FB204D7D7BA2C6949441C378 /* ReadingLogDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DB2F7668871BCA29388159 /* ReadingLogDraft.swift */; };
 		FC8584F91F49B1368AC01508 /* RillArchitectureSampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A20FAAE349BFE450AD51F0 /* RillArchitectureSampleApp.swift */; };
 		FDD7E23A321EB878E2479C01 /* NewLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907BBC0BAA90ACADFABB49DE /* NewLogTests.swift */; };
@@ -65,7 +67,10 @@
 		907BBC0BAA90ACADFABB49DE /* NewLogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLogTests.swift; sourceTree = "<group>"; };
 		92621F92E7AAA282EA6113B3 /* AppRootTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootTests.swift; sourceTree = "<group>"; };
 		956F6A1AC3DE01CECAC5A276 /* LogDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogDetail.swift; sourceTree = "<group>"; };
+		A01E4015B90877388CEC3C03 /* AppLinkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLinkTests.swift; sourceTree = "<group>"; };
+		A5F3E9718E2FCFAC8086AF5B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A7F0176255498F1217C152D4 /* HomeTabsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabsTests.swift; sourceTree = "<group>"; };
+		B49204710E90FA904D04A751 /* AppLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLink.swift; sourceTree = "<group>"; };
 		BAF5842CEE9CB49B47736755 /* AppRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootView.swift; sourceTree = "<group>"; };
 		D2CCB8707FD0725392CEA356 /* AuthClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthClient.swift; sourceTree = "<group>"; };
 		DD71B056281F25BBB2BA5262 /* ReadingLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingLog.swift; sourceTree = "<group>"; };
@@ -108,6 +113,7 @@
 		42B3B72E99952D75FA5A1901 /* RillArchitectureSample */ = {
 			isa = PBXGroup;
 			children = (
+				A5F3E9718E2FCFAC8086AF5B /* Info.plist */,
 				E5C10839ABEF1F78F52A2359 /* App */,
 				9E54C3D3B3DBC4BCE8BB7EBD /* Dependencies */,
 				DFCC18C9DCB0428C2F53580A /* Models */,
@@ -120,6 +126,7 @@
 		60DB4E2C8FEBD1E629485B7E /* RillArchitectureSampleTests */ = {
 			isa = PBXGroup;
 			children = (
+				A01E4015B90877388CEC3C03 /* AppLinkTests.swift */,
 				92621F92E7AAA282EA6113B3 /* AppRootTests.swift */,
 				A7F0176255498F1217C152D4 /* HomeTabsTests.swift */,
 				3FA9CC20999D2A71803734A2 /* LogFormTests.swift */,
@@ -153,6 +160,7 @@
 		DFCC18C9DCB0428C2F53580A /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B49204710E90FA904D04A751 /* AppLink.swift */,
 				DD71B056281F25BBB2BA5262 /* ReadingLog.swift */,
 				F1DB2F7668871BCA29388159 /* ReadingLogDraft.swift */,
 			);
@@ -274,6 +282,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9032F01CD1C0259A0813835F /* AppDependencies.swift in Sources */,
+				C6A85C312AC3FB492E83134B /* AppLink.swift in Sources */,
 				11F5011B47EF16D216AF28D1 /* AppRoot.swift in Sources */,
 				444D932BAA82003260674482 /* AppRootView.swift in Sources */,
 				597695EAD8158DADFE4D31B2 /* AuthClient.swift in Sources */,
@@ -299,6 +308,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F66F76B2E109D57ADE3A1B85 /* AppLinkTests.swift in Sources */,
 				8074B3F6EC319CFCC456DE6D /* AppRootTests.swift in Sources */,
 				F40066E8E1FC700B1B4377EB /* HomeTabsTests.swift in Sources */,
 				C742951FFA7CBD65DD01C36A /* LogFormTests.swift in Sources */,
@@ -390,6 +400,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RillArchitectureSample/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RillArchitectureSample;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -409,6 +420,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RillArchitectureSample/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RillArchitectureSample;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
