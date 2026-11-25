@@ -131,15 +131,18 @@ struct PrettyPrinterTests {
               child: Counter.State(
                 count: 0,
                 child: nil,
-                path: []
+                path: [],
+                alert: nil
               ),
               path: [
                 Counter.State(
                   count: 0,
                   child: nil,
-                  path: []
+                  path: [],
+                  alert: nil
                 )
-              ]
+              ],
+              alert: nil
             )
             """)
     }

@@ -25,7 +25,7 @@ flowchart TB
         end
     end
     subgraph Package["Rill パッケージ"]
-        P["Composable / DependencyClient / PrettyPrinter<br/>testDependency / presentation / navigationPath / binding<br/>IdentityHashable / DeepLink / onDeepLink / NotificationClient"]
+        P["Composable / DependencyClient / PrettyPrinter<br/>testDependency / presentation / navigationPath / binding<br/>IdentityHashable / AlertState / DeepLink / onDeepLink / NotificationClient"]
     end
     Live["liveValue<br/>(本番。見本ではメモリの保存先)"]
     Test["testValue<br/>(テストで差し替える)"]
@@ -37,7 +37,7 @@ flowchart TB
     V & S & D -.-> M
     S -- "準拠する" --> P
     D -- "準拠する" --> P
-    V -- "presentation、navigationPath、binding、onDeepLink を使う" --> P
+    V -- "presentation、navigationPath、binding、alert、onDeepLink を使う" --> P
 ```
 
 ## 1 つの画面の中の流れ(単一方向)

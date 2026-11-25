@@ -20,6 +20,9 @@ func violations(root: AppRoot, homeTabs: HomeTabs, newLog: NewLog, form: LogForm
     root.state.pendingLink = .logList // expected-error
     logList.state.linkedLogMissing = false // expected-error
     detail.state.isDeleting = true // expected-error
+    // アラートと確認ダイアログも、出すのも閉じるのも reduce だけ。View は `alert(store:state:dismiss:)` で出す。
+    detail.state.confirmation = nil // expected-error
+    detail.state.alert = nil // expected-error
     // 入力欄の値も、state からは書き換えられない。例外の `form.draft` を通す。
     form.state.draft = ReadingLogDraft() // expected-error
 }

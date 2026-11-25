@@ -63,7 +63,7 @@ struct LogListTests {
         #expect(sut.topDetail?.state.log == first)
     }
 
-    @Test func send_子のdeleteButtonTapped_一覧から消して戻る() async throws {
+    @Test func send_子のdeleteConfirmed_一覧から消して戻る() async throws {
         let deleted = Recorder<ReadingLog.ID>()
         let readingLogClient = testDependency(of: ReadingLogClient.self) {
             $0.delete = { await deleted.record($0) }
@@ -74,14 +74,14 @@ struct LogListTests {
         await sut.send(.logTapped(first))
         let detail = try #require(sut.topDetail)
 
-        await detail.send(.deleteButtonTapped)
+        await detail.send(.deleteConfirmed)
 
         #expect(deleted.values == [first.id])
         #expect(sut.state.logs == [second])
         #expect(sut.state.path.isEmpty)
     }
 
-    @Test func send_子のdeleteButtonTapped_削除に失敗_積んだまま失敗を示す() async throws {
+    @Test func send_子のdeleteConfirmed_削除に失敗_積んだままアラートを出す() async throws {
         let readingLogClient = testDependency(of: ReadingLogClient.self) {
             $0.delete = { _ in throw TestError() }
         }
@@ -90,10 +90,10 @@ struct LogListTests {
         await sut.send(.logTapped(log))
         let detail = try #require(sut.topDetail)
 
-        await detail.send(.deleteButtonTapped)
+        await detail.send(.deleteConfirmed)
 
         #expect(sut.state.path == [.detail(detail)])
-        #expect(detail.state.deleteFailed)
+        #expect(detail.state.alert?.title == "削除できませんでした")
         #expect(sut.state.logs == [log])
     }
 

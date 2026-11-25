@@ -80,14 +80,12 @@ struct LogDetailView: View {
                     Task { await store.send(.deleteButtonTapped) }
                 }
                 .disabled(store.state.isDeleting)
-            } footer: {
-                if store.state.deleteFailed {
-                    Text("削除できませんでした。")
-                        .foregroundStyle(.red)
-                }
             }
         }
         .navigationTitle("記録")
+        // 確認ダイアログとアラートも状態から出す。どの閉じ方でも、閉じる Action が 1 回届く。
+        .confirmationDialog(store: store, state: \.state.confirmation, dismiss: .confirmationDismissed)
+        .alert(store: store, state: \.state.alert, dismiss: .alertDismissed)
     }
 }
 

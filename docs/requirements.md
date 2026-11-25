@@ -64,7 +64,8 @@ AppRoot.State(
             LogDetail.State(
               log: ReadingLog(...),
               isDeleting: false,
-              deleteFailed: false
+              confirmation: nil,
+              alert: nil
             )
           )
         ],
@@ -80,7 +81,7 @@ AppRoot.State(
 
 ## 2. テストしやすい
 
-`make test` で 73 件(アプリのストア 38 件、Rill パッケージ 35 件)。引数を変えて繰り返すテストは 1 件と数える。
+`make test` で 81 件(アプリのストア 42 件、Rill パッケージ 39 件)。引数を変えて繰り返すテストは 1 件と数える。
 どれも View を立ち上げず、ストアを作って `await send(...)` し、状態を確かめるだけ。
 
 アプリのストアのテスト(`RillArchitectureSampleTests`):
@@ -92,6 +93,7 @@ AppRoot.State(
 | `HomeTabsTests` | 兄弟。記録する画面で保存すると、親が中継して一覧に足される。タブの切り替えと、ディープリンクを子へ渡すこと |
 | `LogListTests` | push とシートの子。記録を選ぶと積み、戻ると取り除く。子の「削除」で親が戻す。絞り込みのシートで選ぶと、親が絞り込んで閉じる。ディープリンクで記録の画面だけを積む。アプリが前面に来たら(通知)読み込み直し、画面が消えたら受けなくなる |
 | `AppLinkTests` | ディープリンクの URL を行き先にする。解釈できない URL は nil |
+| `LogDetailTests` | 削除の確認ダイアログと、失敗したときのアラート。中身(ボタンと送る Action)を値で確かめる |
 | `AppRootTests` | ログイン → 記録 → 一覧 → ログアウトを、Action だけで通す。ディープリンクを、ログインの前後で受ける。積んだ画面も含めたアプリ全体の状態を `prettyState` で丸ごと比べる |
 
 Rill パッケージのテスト(`RillTests`)。アプリの型を使わず、テスト用の小さなストアで決まりそのものを確かめる:
@@ -103,6 +105,7 @@ Rill パッケージのテスト(`RillTests`)。アプリの型を使わず、�
 | `NavigationTests` | `navigationPath` の Binding は積んだ子のストアを返す。短くすると、残った数で pop の Action を送って戻る。長くしても何も送らない。`IdentityHashable` は同じストアだけを等しいとみなし、状態が変わってもハッシュ値は変わらない |
 | `DeepLinkTests` | `open` は解釈できる URL だけを Action にして送る。`binding` は書き込むと Action を送り、`reduce` が状態を変える |
 | `NotificationClientTests` | 通知を届いた順に値にして流す。受けているタスクを取り消すと受け取りを止める。`testValue` は何も届かない |
+| `AlertTests` | アラートのボタンは、閉じる Action のあとにボタンの Action を送る。ボタンと書き換えの順番によらず、閉じる Action は 1 回 |
 | `DependencyClientTests` | `testDependency` は差し替えた所だけを変え、`testValue` そのものは変えない |
 | `PrettyPrinterTests` | 文字、数、`Optional`、構造体、列挙型(関連値つき)、配列、集合、辞書、入れ子のストア(積んだストアを含む)を、決まった形で字下げして出す |
 
@@ -112,7 +115,7 @@ Rill パッケージのテスト(`RillTests`)。アプリの型を使わず、�
 
 ## 3. 単一方向である
 
-`make check-unidirectional` で確かめる。`Checks/UnidirectionalViolations.swift` の、外から状態を書き換える 15 行が、
+`make check-unidirectional` で確かめる。`Checks/UnidirectionalViolations.swift` の、外から状態を書き換える 17 行が、
 すべて `setter is inaccessible` のコンパイルエラーになる。
 
 決まり:
@@ -135,6 +138,8 @@ Rill パッケージのテスト(`RillTests`)。アプリの型を使わず、�
 - タブは `TabView(selection: $store.state.selectedTab)` で束縛できない。代わりに
   `store.binding(\.state.selectedTab, send: { .tabSelected($0) })`(`Packages/Rill/Sources/Rill/Support/Composable+Binding.swift`)を使う。
   `Picker` や `Toggle` など、選ぶ操作も同じ。入力欄は決まり 2 の例外のままで、`binding` は使わない。
+- アラートと確認ダイアログは `.alert(isPresented:)` に状態を束縛しない。中身を `AlertState` で状態に持ち、
+  `.alert(store:state:dismiss:)`、`.confirmationDialog(store:state:dismiss:)` で出す([アラートと確認ダイアログ](alerts.md))。
 - ディープリンクで行き先の画面の状態を直接作れない。一番上のストアへ `.deepLinkOpened` を送る。
 - `NavigationStack` の path の要素は `Hashable` でなければならない。ストアは `IdentityHashable` に準拠させ、同じストアかどうかで比べる。
   モジュールの既定の隔離が MainActor なので、`final class LogDetail: Composable, nonisolated IdentityHashable` と `nonisolated` を付ける
@@ -148,6 +153,7 @@ Rill パッケージのテスト(`RillTests`)。アプリの型を使わず、�
 | 親から子 | `HomeTabs.reduce` が `logList.send(.logAdded(...))` |
 | 兄弟の間 | 記録する画面(孫)で保存 → `HomeTabs` が受けて → 一覧へ送る |
 | 子を積む、戻る(push) | `LogList.State.path`。記録を選ぶと `LogDetail` を積む。子の「削除」は親が受けて取り除く |
+| 確かめる、知らせる | `LogDetail.State.confirmation`(確認ダイアログ)、`LogDetail.State.alert`(アラート)。押したボタンも Action で届く |
 | 子を出す、閉じる(シート) | `LogList.State.filter`。子の「評価を選ぶ」「キャンセル」は親が受けて `nil` にする |
 | 画面の切り替え | `AppRoot.State.screen`(ログイン ↔ タブ)、`HomeTabs.State.selectedTab`(タブ)、`NewLog.State.phase`(入力中 ↔ 保存したあと) |
 | 外からの出来事(通知) | `LogList` が、アプリが前面に来たら読み込み直す。画面どうしの連携には使わない |

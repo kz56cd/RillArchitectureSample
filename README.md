@@ -14,7 +14,7 @@ LUCAのうち `Composable` だけを抜き出し、決まりを 4 つ足した�
 - 単一方向である
 - View 同士の連携(親子間も含む)がしやすい
 
-題材は、読んだ本を記録する小さなアプリ(ログイン、記録する、一覧、詳しい画面(push)、絞り込み(シート)、ディープリンク)。
+題材は、読んだ本を記録する小さなアプリ(ログイン、記録する、一覧、詳しい画面(push)、削除の確認(確認ダイアログ、アラート)、絞り込み(シート)、ディープリンク)。
 
 名前の Rill は「小さな流れ」のこと。状態が一方向に流れることと、中心が小さい(20 行ほどのプロトコル)ことから。
 
@@ -41,6 +41,7 @@ make check                 # 上の 2 つ
 | [4 つの条件をどこで確かめるか](docs/requirements.md) | 条件ごとの決まりと、確かめているテスト・検査。状態の pretty print |
 | [ディープリンク](docs/deeplink.md) | URL から画面を開く流れ、アーキテクチャで保証されること、テスト |
 | [通知(NotificationCenter)](docs/notifications.md) | 通知を Action として受ける。何に使い、何に使わないか |
+| [アラートと確認ダイアログ](docs/alerts.md) | 中身を値で持って状態から出す。閉じるときの決まり |
 | [UIKit で使う](docs/uikit.md) | SwiftUI との対応、書き方の例、気をつけること |
 | [ほかのアーキテクチャとの比較](docs/comparison.md) | Flux との違い、LUCA との違い |
 
@@ -66,7 +67,7 @@ flowchart LR
 | ディレクトリ | 中身 |
 |---|---|
 | `Packages/Rill/Sources/Rill/Core` | アーキテクチャの決まりそのもの。`Composable`(LUCA をもとに `State` を足したもの)、`DependencyClient`、`PrettyPrinter` |
-| `Packages/Rill/Sources/Rill/Support` | 決まりを守ったまま使うための補助。画面の遷移(シート、push、タブ)の Binding、ディープリンクの受け口、通知を `AsyncStream` で受ける依存(`NotificationClient`) |
+| `Packages/Rill/Sources/Rill/Support` | 決まりを守ったまま使うための補助。画面の遷移(シート、push、タブ)の Binding、アラートと確認ダイアログ(`AlertState`)、ディープリンクの受け口、通知を `AsyncStream` で受ける依存(`NotificationClient`) |
 | `Packages/Rill/Tests/RillTests` | パッケージのテスト |
 | `RillArchitectureSample/Dependencies` | `AppDependencies`、`AuthClient`、`ReadingLogClient`、ストアが受ける通知の名前 |
 | `RillArchitectureSample/Models` | 読書の記録と、入力の確かめ、ディープリンクの行き先(`AppLink`) |

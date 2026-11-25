@@ -26,6 +26,7 @@ final class Counter: Composable, nonisolated IdentityHashable {
         var count = 0
         var child: Counter?
         var path: [Counter] = []
+        var alert: AlertState<Action>?
     }
 
     enum Event: Equatable {
@@ -88,6 +89,21 @@ final class Counter: Composable, nonisolated IdentityHashable {
 
         case let .countSelected(value):
             state.count = value
+
+        case .resetButtonTapped:
+            state.alert = AlertState(
+                title: "数を 0 に戻しますか?",
+                buttons: [
+                    AlertButton("戻す", role: .destructive, action: .resetConfirmed),
+                    AlertButton("キャンセル", role: .cancel)
+                ]
+            )
+
+        case .resetConfirmed:
+            state.count = 0
+
+        case .alertDismissed:
+            state.alert = nil
         }
     }
 
@@ -101,6 +117,9 @@ final class Counter: Composable, nonisolated IdentityHashable {
         case pushButtonTapped
         case pathPopped(count: Int)
         case countSelected(Int)
+        case resetButtonTapped
+        case resetConfirmed
+        case alertDismissed
     }
 }
 

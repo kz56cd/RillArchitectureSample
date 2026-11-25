@@ -3,7 +3,7 @@
 [README に戻る](../README.md)
 
 使える。ストア、依存、テストは UI の仕組みに依存しないので、そのまま使える。変わるのは View の層だけ。
-(`Rill` パッケージで SwiftUI を使っているのは、画面の遷移の Binding の補助の `presentation`、`navigationPath`、`binding`、`onDeepLink` だけ。)
+(`Rill` パッケージで SwiftUI を使っているのは、画面の遷移の Binding の補助の `presentation`、`navigationPath`、`binding`、`alert`、`confirmationDialog`、`onDeepLink` だけ。)
 
 見本には UIKit の画面を含めていない。下のコードは、アプリのソースと一緒に型検査が通ることだけを確かめた概要で、動かしてはいない。
 
@@ -19,6 +19,7 @@
 | シート | `.sheet(item: store.presentation(\.state.filter, dismiss: .filterDismissed))` | `updateProperties()` で `state.filter` を見て `present` / `dismiss` する。スワイプで閉じたら `presentationControllerDidDismiss` で `.filterDismissed` を送る |
 | タブ | `TabView(selection: store.binding(\.state.selectedTab, send: { .tabSelected($0) }))` | `UITabBarController`。`tabBarController(_:shouldSelect:)` で `false` を返して `.tabSelected` を送り、`updateProperties()` で `selectedIndex` を合わせる |
 | 画面の切り替え | `switch store.state.screen` | `AppRoot.state.screen` を見て `rootViewController` を差し替える |
+| アラート、確認ダイアログ | `.alert(store: store, state: \.state.alert, dismiss: .alertDismissed)` | `updateProperties()` で `state.alert` を見て `UIAlertController` を出し入れする。ボタンの処理で、閉じる Action を送ってからボタンの Action を送る |
 | 通知 | `.task { await store.send(.observeNotifications) }` | 受け取りの `Task` を ViewController が持ち、`viewDidAppear` で始めて `viewDidDisappear` で取り消す |
 | ディープリンク | `.onDeepLink(AppLink.self, to: store) { .deepLinkOpened($0) }` | `scene(_:openURLContexts:)` と `scene(_:continue:)` で URL を受け、`store.open(url, as: AppLink.self) { .deepLinkOpened($0) }` を呼ぶ |
 
@@ -118,7 +119,7 @@ final class LogListViewController: UIViewController, UINavigationControllerDeleg
 - **iOS 26 より前で使うとき。** iOS 18 では Info.plist に `UIObservationTrackingEnabled` を `YES` で足すと、
   `viewWillLayoutSubviews()` などで読んだ値が追われる(`updateProperties()` は iOS 26 から)。
   iOS 17 では `withObservationTracking` で自分で購読し直す必要がある。
-- **`presentation`、`navigationPath`、`binding`、`onDeepLink` は SwiftUI 専用。** UIKit だけのアプリで使うなら、これらを `Rill` から
+- **`presentation`、`navigationPath`、`binding`、`alert`、`confirmationDialog`、`onDeepLink` は SwiftUI 専用。** UIKit だけのアプリで使うなら、これらを `Rill` から
   別のターゲット(例:`RillSwiftUI`)へ分けると、`Rill` が SwiftUI に依存しなくなる。
 - **テストは変わらない。** ストアのテストは View を立ち上げないので、UIKit でも SwiftUI でも同じものが使える。
   SwiftUI と UIKit の画面を混ぜても、同じストアを渡せばよい。

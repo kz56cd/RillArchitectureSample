@@ -21,6 +21,7 @@
 		732F28ABA60C7CC265156660 /* TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80148E04A5BC5F848A74E733 /* TestSupport.swift */; };
 		7F33523CA6E46687771CEE36 /* Rill in Frameworks */ = {isa = PBXBuildFile; productRef = 4C19FB6226527AC60F4402E9 /* Rill */; };
 		8074B3F6EC319CFCC456DE6D /* AppRootTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92621F92E7AAA282EA6113B3 /* AppRootTests.swift */; };
+		80EB291E7E8392CA4BF0A599 /* LogDetailTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445CC437141264D110BC8762 /* LogDetailTests.swift */; };
 		8A07787839EA2003A3404168 /* LogFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBB9579C06D8CC193EE2C35 /* LogFilter.swift */; };
 		9032F01CD1C0259A0813835F /* AppDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E80E4D1AF4C17971F89488B /* AppDependencies.swift */; };
 		AB6FDB949AA2123BEBDA27DC /* AppNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9853C856A03A9E3081619B6 /* AppNotifications.swift */; };
@@ -55,6 +56,7 @@
 		2E13E129999004941E1114EF /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		3DA2A0709C7DABBBA12A8960 /* HomeTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabsView.swift; sourceTree = "<group>"; };
 		3FA9CC20999D2A71803734A2 /* LogFormTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogFormTests.swift; sourceTree = "<group>"; };
+		445CC437141264D110BC8762 /* LogDetailTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogDetailTests.swift; sourceTree = "<group>"; };
 		645B00B21AFC861F6D13E488 /* HomeTabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabs.swift; sourceTree = "<group>"; };
 		67A20FAAE349BFE450AD51F0 /* RillArchitectureSampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RillArchitectureSampleApp.swift; sourceTree = "<group>"; };
 		6E47DD987613CFAF9DD91752 /* AppRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRoot.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				A01E4015B90877388CEC3C03 /* AppLinkTests.swift */,
 				92621F92E7AAA282EA6113B3 /* AppRootTests.swift */,
 				A7F0176255498F1217C152D4 /* HomeTabsTests.swift */,
+				445CC437141264D110BC8762 /* LogDetailTests.swift */,
 				3FA9CC20999D2A71803734A2 /* LogFormTests.swift */,
 				7CF661CB8AC66BCA2A412939 /* LogListTests.swift */,
 				907BBC0BAA90ACADFABB49DE /* NewLogTests.swift */,
@@ -315,6 +318,7 @@
 				F66F76B2E109D57ADE3A1B85 /* AppLinkTests.swift in Sources */,
 				8074B3F6EC319CFCC456DE6D /* AppRootTests.swift in Sources */,
 				F40066E8E1FC700B1B4377EB /* HomeTabsTests.swift in Sources */,
+				80EB291E7E8392CA4BF0A599 /* LogDetailTests.swift in Sources */,
 				C742951FFA7CBD65DD01C36A /* LogFormTests.swift in Sources */,
 				517F34F9447CFF6724DC69A6 /* LogListTests.swift in Sources */,
 				FDD7E23A321EB878E2479C01 /* NewLogTests.swift in Sources */,
