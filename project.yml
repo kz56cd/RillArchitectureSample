@@ -13,7 +13,7 @@ settings:
     "EXCLUDED_ARCHS[sdk=iphonesimulator*]": x86_64
 packages:
   Rill:
-    path: Packages/Rill
+    path: .
 targets:
   RillArchitectureSample:
     type: application

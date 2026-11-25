@@ -15,7 +15,7 @@ if [ -z "$traits" ]; then
 fi
 
 project=RillArchitectureSample.xcodeproj/project.pbxproj
-anchor=$'\t\t\trelativePath = Packages/Rill;'
+anchor=$'\t\t\trelativePath = .;'
 
 if ! grep -qF "$anchor" "$project"; then
     echo "Rill パッケージの参照が見つからない: $project" >&2

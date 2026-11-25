@@ -20,8 +20,8 @@ test: generate
 
 ## Rill パッケージのテストだけを、macOS で手早く流す。多言語化する設定と、しない設定(trait NoLocalization)の両方
 test-rill:
-	cd Packages/Rill && swift test
-	cd Packages/Rill && swift test --traits NoLocalization
+	swift test
+	swift test --traits NoLocalization
 
 ## 単一方向を破る書き方が、コンパイルエラーになることを確かめる
 check-unidirectional:

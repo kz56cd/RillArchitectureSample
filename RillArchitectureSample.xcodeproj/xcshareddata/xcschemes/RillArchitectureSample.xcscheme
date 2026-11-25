@@ -58,7 +58,7 @@
                BlueprintIdentifier = "RillTests"
                BuildableName = "RillTests"
                BlueprintName = "RillTests"
-               ReferencedContainer = "container:Packages/Rill">
+               ReferencedContainer = "container:.">
             </BuildableReference>
          </TestableReference>
       </Testables>

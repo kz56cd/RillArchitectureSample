@@ -18,6 +18,29 @@ LUCAのうち `Composable` だけを抜き出し、決まりを 4 つ足した�
 
 名前の Rill は「小さな流れ」のこと。状態が一方向に流れることと、中心が小さい(20 行ほどのプロトコル)ことから。
 
+## 導入
+
+Swift Package Manager で入れる。iOS 26 以降(Swift 6.4)。
+
+```swift
+// Package.swift
+dependencies: [
+    .package(url: "https://github.com/kz56cd/RillArchitectureSample.git", .upToNextMinor(from: "0.1.3"))
+],
+targets: [
+    .target(name: "MyApp", dependencies: [.product(name: "Rill", package: "RillArchitectureSample")])
+]
+```
+
+Xcode では File → Add Package Dependencies… で `https://github.com/kz56cd/RillArchitectureSample.git` を入れ、ライブラリ `Rill` を選ぶ。
+
+- 1.0 になるまでは、0.1 → 0.2 のように 2 つ目の数が上がると書き方が変わることがある。`.upToNextMinor` で、上がる範囲を 0.1.x にとどめる。
+- 多言語化しないアプリでは、trait `NoLocalization` を選ぶ(`.package(url: ..., .upToNextMinor(from: "0.1.3"), traits: ["NoLocalization"])`)。
+  Xcode のプロジェクトでの選び方は、[画面に出す文言](docs/text.md) の「trait の選び方」にある。
+- 依存として使えるのは v0.1.3 から(パッケージの定義をリポジトリの直下に置いた版)。
+
+ストアは MainActor で動かす前提なので、アプリのターゲットも既定の隔離を MainActor にする(Xcode の `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`)。
+
 ## 動かし方
 
 ```sh
@@ -71,6 +94,7 @@ flowchart LR
 
 | ディレクトリ | 中身 |
 |---|---|
+| `Package.swift` | Rill パッケージの定義。依存として使えるよう、リポジトリの直下に置く。本体は `Packages/Rill` にある |
 | `Packages/Rill/Sources/Rill/Core` | アーキテクチャの決まりそのもの。`Composable`(LUCA をもとに `State` を足したもの)、`DependencyClient`、`PrettyPrinter`、画面に出す文言(`DisplayText`) |
 | `Packages/Rill/Sources/Rill/Support` | 決まりを守ったまま使うための補助。画面の遷移(シート、push、タブ)の Binding、アラートと確認ダイアログ(`AlertState`)、ディープリンクの受け口、通知を `AsyncStream` で受ける依存(`NotificationClient`) |
 | `Packages/Rill/Tests/RillTests` | パッケージのテスト |
