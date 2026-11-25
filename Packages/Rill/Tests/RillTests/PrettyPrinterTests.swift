@@ -118,6 +118,33 @@ struct PrettyPrinterTests {
             """)
     }
 
+    @Test func format_LocalizedStringResource_キーだけを出す() {
+        let resource: LocalizedStringResource = "削除できませんでした"
+
+        #expect(PrettyPrinter.format(resource) == "\"削除できませんでした\"")
+    }
+
+    @Test func format_AlertState_文言はキーで出す() {
+        let alert = AlertState<Counter.Action>(
+            title: "数を 0 に戻しますか?",
+            buttons: [AlertButton("戻す", role: .destructive, action: .resetConfirmed)]
+        )
+
+        #expect(PrettyPrinter.format(alert) == """
+            AlertState<Counter.Action>(
+              title: "数を 0 に戻しますか?",
+              message: nil,
+              buttons: [
+                AlertButton<Counter.Action>(
+                  title: "戻す",
+                  role: .destructive,
+                  action: .resetConfirmed
+                )
+              ]
+            )
+            """)
+    }
+
     // MARK: ストア
 
     @Test func prettyState_子と積んだストアの状態も入れ子で出す() async {

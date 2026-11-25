@@ -48,6 +48,9 @@ public enum PrettyPrinter {
             return String(character).debugDescription
         case is UUID, is Date, is URL, is Decimal:
             return String(describing: value)
+        case let resource as LocalizedStringResource:
+            // 中身(表、ロケール、バンドルなど)は並べず、キーだけを出す。どの言語で動かしても同じ文字列になる。
+            return resource.key.debugDescription
         default:
             break
         }
@@ -153,8 +156,25 @@ public enum PrettyPrinter {
     }
 
     /// モジュールの名前を外した型の名前。`RillArchitectureSample.LogList.State` なら `LogList.State`
+    ///
+    /// ジェネリクスの型引数の中も外す。`Rill.AlertState<RillTests.Counter.Action>` なら `AlertState<Counter.Action>`
     private static func typeName(of value: Any) -> String {
         let name = String(reflecting: type(of: value))
+        var result = ""
+        var component = ""
+        for character in name {
+            if "<>, ".contains(character) {
+                result += withoutModule(component) + String(character)
+                component = ""
+            } else {
+                component.append(character)
+            }
+        }
+        return result + withoutModule(component)
+    }
+
+    /// `RillTests.Counter.Action` のような型の名前から、頭のモジュールの名前を外す。
+    private static func withoutModule(_ name: String) -> String {
         guard let dot = name.firstIndex(of: ".") else {
             return name
         }

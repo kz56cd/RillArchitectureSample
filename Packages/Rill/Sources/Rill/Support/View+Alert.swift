@@ -16,7 +16,7 @@ public extension View {
     ) -> some View {
         let alert = store[keyPath: keyPath]
         return self.alert(
-            alert?.title ?? "",
+            Text(alert?.title ?? ""),
             isPresented: store.isAlertPresented(keyPath, dismiss: dismissAction),
             presenting: alert
         ) { alert in
@@ -38,7 +38,7 @@ public extension View {
     ) -> some View {
         let dialog = store[keyPath: keyPath]
         return confirmationDialog(
-            dialog?.title ?? "",
+            Text(dialog?.title ?? ""),
             isPresented: store.isAlertPresented(keyPath, dismiss: dismissAction),
             titleVisibility: .visible,
             presenting: dialog
@@ -80,18 +80,22 @@ private struct AlertButtons<Store: Composable>: View {
     var body: some View {
         ForEach(alert.buttons.indices, id: \.self) { index in
             let button = alert.buttons[index]
-            Button(button.title, role: button.role.map(ButtonRole.init)) {
+            Button(role: button.role.map(ButtonRole.init)) {
                 Task { await store.tapAlertButton(button, in: keyPath, dismiss: dismissAction) }
+            } label: {
+                Text(button.title)
             }
         }
     }
 }
 
-private extension ButtonRole {
+extension ButtonRole {
     init<Action>(_ role: AlertButton<Action>.Role) {
         switch role {
         case .cancel: self = .cancel
         case .destructive: self = .destructive
+        case .confirm: self = .confirm
+        case .close: self = .close
         }
     }
 }

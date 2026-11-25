@@ -81,7 +81,7 @@ AppRoot.State(
 
 ## 2. テストしやすい
 
-`make test` で 81 件(アプリのストア 42 件、Rill パッケージ 39 件)。引数を変えて繰り返すテストは 1 件と数える。
+`make test` で 85 件(アプリのストア 42 件、Rill パッケージ 43 件)。引数を変えて繰り返すテストは 1 件と数える。
 どれも View を立ち上げず、ストアを作って `await send(...)` し、状態を確かめるだけ。
 
 アプリのストアのテスト(`RillArchitectureSampleTests`):
@@ -107,7 +107,7 @@ Rill パッケージのテスト(`RillTests`)。アプリの型を使わず、�
 | `NotificationClientTests` | 通知を届いた順に値にして流す。受けているタスクを取り消すと受け取りを止める。`testValue` は何も届かない |
 | `AlertTests` | アラートのボタンは、閉じる Action のあとにボタンの Action を送る。ボタンと書き換えの順番によらず、閉じる Action は 1 回 |
 | `DependencyClientTests` | `testDependency` は差し替えた所だけを変え、`testValue` そのものは変えない |
-| `PrettyPrinterTests` | 文字、数、`Optional`、構造体、列挙型(関連値つき)、配列、集合、辞書、入れ子のストア(積んだストアを含む)を、決まった形で字下げして出す |
+| `PrettyPrinterTests` | 文字、数、`Optional`、`LocalizedStringResource`(キーだけ)、ジェネリクスの型、構造体、列挙型(関連値つき)、配列、集合、辞書、入れ子のストア(積んだストアを含む)を、決まった形で字下げして出す |
 
 `send` の順番を逆にすると、`ComposableTests`、`PresentationTests`、`NavigationTests`、`DeepLinkTests` の 8 件が落ちることを確かめてある。
 

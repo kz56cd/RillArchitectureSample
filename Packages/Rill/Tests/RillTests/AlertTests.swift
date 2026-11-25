@@ -76,6 +76,27 @@ struct AlertTests {
         #expect(reduced.contains(.reduce(.resetConfirmed)))
         #expect(sut.state.count == 0)
     }
+
+    @Test func ButtonRole_役割をSwiftUIの役割に読み替える() {
+        typealias Role = AlertButton<Counter.Action>.Role
+
+        #expect(ButtonRole(Role.cancel) == .cancel)
+        #expect(ButtonRole(Role.destructive) == .destructive)
+        #expect(ButtonRole(Role.confirm) == .confirm)
+        #expect(ButtonRole(Role.close) == .close)
+    }
+
+    @Test func 文言_文字列リテラルがキーになる() {
+        let alert = AlertState<Counter.Action>(
+            title: "数を 0 に戻しますか?",
+            message: "元に戻せません。",
+            buttons: [AlertButton("戻す", role: .confirm, action: .resetConfirmed)]
+        )
+
+        #expect(alert.title.key == "数を 0 に戻しますか?")
+        #expect(alert.message?.key == "元に戻せません。")
+        #expect(alert.buttons[0].title.key == "戻す")
+    }
 }
 
 private extension Counter.Event {

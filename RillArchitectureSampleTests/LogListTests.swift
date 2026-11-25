@@ -93,7 +93,7 @@ struct LogListTests {
         await detail.send(.deleteConfirmed)
 
         #expect(sut.state.path == [.detail(detail)])
-        #expect(detail.state.alert?.title == "削除できませんでした")
+        #expect(detail.state.alert?.title.key == "削除できませんでした")
         #expect(sut.state.logs == [log])
     }
 

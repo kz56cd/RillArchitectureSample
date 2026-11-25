@@ -1,3 +1,5 @@
+import Foundation
+
 /// アラートと確認ダイアログの中身
 ///
 /// タイトル、メッセージ、ボタンを値で持ち、ストアの状態に入れる。押したボタンは Action として送る。
@@ -13,19 +15,22 @@
 /// )
 /// ```
 ///
+/// 文言は `LocalizedStringResource` で持つので、`Localizable.xcstrings` で訳される。
+/// 文字列リテラルをそのまま書ける(リテラルがキーになる)。
+///
 /// SwiftUI では `alert(store:state:dismiss:)`、`confirmationDialog(store:state:dismiss:)` で出す。
 nonisolated public struct AlertState<Action: Sendable>: Sendable {
 
     // MARK: Properties
 
-    public var title: String
-    public var message: String?
+    public var title: LocalizedStringResource
+    public var message: LocalizedStringResource?
     /// 空なら、閉じるだけの「OK」を出す。
     public var buttons: [AlertButton<Action>]
 
     // MARK: Initializers
 
-    public init(title: String, message: String? = nil, buttons: [AlertButton<Action>] = []) {
+    public init(title: LocalizedStringResource, message: LocalizedStringResource? = nil, buttons: [AlertButton<Action>] = []) {
         self.title = title
         self.message = message
         self.buttons = buttons
@@ -37,20 +42,26 @@ nonisolated public struct AlertButton<Action: Sendable>: Sendable {
 
     /// ボタンの役割。SwiftUI の `ButtonRole`、UIKit の `UIAlertAction.Style` に読み替える
     public enum Role: Sendable, Equatable {
+        /// やめる
         case cancel
+        /// 消すなど、元に戻せないことをする
         case destructive
+        /// 決める(iOS 26 から)
+        case confirm
+        /// 閉じる(iOS 26 から)
+        case close
     }
 
     // MARK: Properties
 
-    public var title: String
+    public var title: LocalizedStringResource
     public var role: Role?
     /// 押したときに送る Action。nil なら閉じるだけ
     public var action: Action?
 
     // MARK: Initializers
 
-    public init(_ title: String, role: Role? = nil, action: Action? = nil) {
+    public init(_ title: LocalizedStringResource, role: Role? = nil, action: Action? = nil) {
         self.title = title
         self.role = role
         self.action = action

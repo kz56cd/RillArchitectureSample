@@ -46,6 +46,43 @@ case .alertDismissed:
 
 ボタンを書かなければ、閉じるだけの「OK」が出る。
 
+## ボタン
+
+ボタンの数に決まりは無い。0 個(閉じるだけの「OK」)から何個でも並べられ、ボタンごとに別の Action を送れる。
+Action は関連値を持てるので、`AlertButton("3 つ", action: .ratingChosen(3))` のように値を付けて送れる。
+
+| 役割 | SwiftUI | 使う場面 |
+|---|---|---|
+| なし | ふつうのボタン | 選択肢の 1 つ |
+| `.cancel` | `ButtonRole.cancel` | やめる |
+| `.destructive` | `ButtonRole.destructive` | 消すなど、元に戻せないこと |
+| `.confirm` | `ButtonRole.confirm`(iOS 26 から) | 決める |
+| `.close` | `ButtonRole.close`(iOS 26 から) | 閉じる |
+
+役割は SwiftUI の `ButtonRole` を直接持たず、自前の型で持つ。UIKit の `UIAlertAction.Style` にも読み替えられるようにするため。
+
+## 文言と多言語化
+
+タイトル、メッセージ、ボタンの文言は `LocalizedStringResource` で持つ。文字列リテラルをそのまま書けば、それがキーになり、
+`Localizable.xcstrings` の訳が使われる。SwiftUI の `Text("...")` や `Button("...")` と同じ扱いになる。
+
+```swift
+AlertState(title: "削除できませんでした")   // キーは "削除できませんでした"
+```
+
+テストでは `alert.title.key == "削除できませんでした"` のようにキーで比べる。`prettyState` でもキーだけを出すので、
+どの言語で動かしても同じ文字列になる。
+
+## 扱わないもの
+
+アーキテクチャを膨らませないため、次のものは `AlertState` に入れていない。
+
+| 扱わないもの | 代わりにすること |
+|---|---|
+| アラートの中の入力欄(`TextField`、`SecureField`) | 入力が要るものはシートで出す。入力欄の値は、決まり 2 の例外のとおりストアの計算プロパティで束縛する |
+| ボタンを押せなくする(`.disabled`) | 入力欄と組み合わせて使うものなので、同じくシートで出す |
+| 文字以外のボタン(アイコンなど)、確認ダイアログのタイトルを隠す | 必要になったら足す |
+
 ## 閉じるときの決まり
 
 | 閉じ方 | 届く Action |
@@ -85,7 +122,8 @@ iOS 26 の iPhone では、確認ダイアログは押したボタンの近く�
 
 | テスト | 確かめること |
 |---|---|
-| `AlertTests`(Rill) | ボタンを押すと、閉じる Action のあとにボタンの Action を送る。Action の無いボタンは閉じるだけ。外を押すと閉じる Action を送る。ボタンと書き換えの順番によらず、閉じる Action は 1 回 |
+| `AlertTests`(Rill) | ボタンを押すと、閉じる Action のあとにボタンの Action を送る。Action の無いボタンは閉じるだけ。外を押すと閉じる Action を送る。ボタンと書き換えの順番によらず、閉じる Action は 1 回。役割を SwiftUI の役割に読み替える。文字列リテラルがキーになる |
+| `PrettyPrinterTests`(Rill) | `LocalizedStringResource` はキーだけを出す。`AlertState` の文言もキーで出す |
 | `LogDetailTests` | 「削除する」で確認ダイアログを出し、確かめるまでは消さない。確認で削除する。キャンセルは消さずに閉じる。削除に失敗したらアラートを出し、閉じると消える |
 
 「まだ出ているときだけ送る」確かめを外すと、`AlertTests` の順番を入れ替えたテストが両方落ちることを確かめてある。
@@ -95,12 +133,16 @@ iOS 26 の iPhone では、確認ダイアログは押したボタンの近く�
 - 確認ダイアログで「削除する」を押すと、削除して一覧へ戻る。
 - 外を押して閉じると、出直さず、もう一度押せば出る(2 回続けて確かめた)。
 - 削除に失敗するとアラートが出て、OK で閉じると出直さず、もう一度確認から始められる。
+- 英語の訳を足して英語で起動すると、アラートと確認ダイアログの文言が訳される。`.close` の役割のボタンも出る
+  (訳と `.close` のボタンは確かめるためだけに足したもので、見本には入れていない)。
 
 ## UIKit で使うとき
 
 `updateProperties()` で `state.alert` を見て、`UIAlertController` を出し入れする。
 
-- ボタンは `UIAlertAction` にする。役割は `.cancel` → `.cancel`、`.destructive` → `.destructive`、なし → `.default`。
+- ボタンは `UIAlertAction` にする。役割は `.cancel` → `.cancel`、`.destructive` → `.destructive`、それ以外(なし、`.confirm`、`.close`)→ `.default`。
+  `.confirm` のボタンは `UIAlertController.preferredAction` にすると、意図が近くなる。
+- 文言は `String(localized: alert.title)` で文字列にする。
 - ボタンの処理では、閉じる Action を送ってから、ボタンの Action を送る。
 - 確認ダイアログは `preferredStyle: .actionSheet` にする。外を押して閉じたときは `.cancel` のボタンの処理が呼ばれる作りなので、`.cancel` のボタンが無ければ足し、その処理で閉じる Action を送る。
 
