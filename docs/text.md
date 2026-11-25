@@ -108,7 +108,7 @@ Text(title)                        // SwiftUI の Text(String) がそのまま�
 
 | 使い方 | 選び方 |
 |---|---|
-| Swift Package Manager | 依存に `.package(url: "https://github.com/kz56cd/RillArchitectureSample.git", .upToNextMinor(from: "0.1.3"), traits: ["NoLocalization"])` と書く。Rill のテストは `swift test --traits NoLocalization` |
+| Swift Package Manager | 依存に `.package(url: "https://github.com/kz56cd/RillArchitectureSample.git", .upToNextMinor(from: "0.1.4"), traits: ["NoLocalization"])` と書く。Rill のテストは `swift test --traits NoLocalization` |
 | Xcode のプロジェクト | パッケージの参照に `traits = (NoLocalization,);` を持たせる。XcodeGen は書き出せないので、この見本では `make generate` が `Scripts/apply-rill-traits.sh` で書き足す(`RILL_TRAITS` で選ぶ。既定は `NoLocalization`) |
 
 ### あとで多言語化するとき

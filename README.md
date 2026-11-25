@@ -25,7 +25,7 @@ Swift Package Manager で入れる。iOS 26 以降(Swift 6.4)。
 ```swift
 // Package.swift
 dependencies: [
-    .package(url: "https://github.com/kz56cd/RillArchitectureSample.git", .upToNextMinor(from: "0.1.3"))
+    .package(url: "https://github.com/kz56cd/RillArchitectureSample.git", .upToNextMinor(from: "0.1.4"))
 ],
 targets: [
     .target(name: "MyApp", dependencies: [.product(name: "Rill", package: "RillArchitectureSample")])
@@ -35,9 +35,9 @@ targets: [
 Xcode では File → Add Package Dependencies… で `https://github.com/kz56cd/RillArchitectureSample.git` を入れ、ライブラリ `Rill` を選ぶ。
 
 - 1.0 になるまでは、0.1 → 0.2 のように 2 つ目の数が上がると書き方が変わることがある。`.upToNextMinor` で、上がる範囲を 0.1.x にとどめる。
-- 多言語化しないアプリでは、trait `NoLocalization` を選ぶ(`.package(url: ..., .upToNextMinor(from: "0.1.3"), traits: ["NoLocalization"])`)。
+- 多言語化しないアプリでは、trait `NoLocalization` を選ぶ(`.package(url: ..., .upToNextMinor(from: "0.1.4"), traits: ["NoLocalization"])`)。
   Xcode のプロジェクトでの選び方は、[画面に出す文言](docs/text.md) の「trait の選び方」にある。
-- 依存として使えるのは v0.1.3 から(パッケージの定義をリポジトリの直下に置いた版)。
+- 依存として使えるのは v0.1.3 から(パッケージの定義をリポジトリの直下に置いた版)。ライセンス(MIT)を付けたのは v0.1.4 から。
 
 ストアは MainActor で動かす前提なので、アプリのターゲットも既定の隔離を MainActor にする(Xcode の `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`)。
 
@@ -135,3 +135,7 @@ NotificationCenter の通知も、`AsyncStream` にして Action として受け
 - [LUCA: A Modern Architecture for SwiftUI Development](https://dev.to/kyome22/luca-a-modern-architecture-for-swiftui-development-3g2i)
 - [Kyome22/Telescopure の `Composable.swift`](https://github.com/Kyome22/Telescopure/blob/main/LocalPackage/Sources/Model/Composable.swift)
 - [Updating views automatically with observation tracking in UIKit(Apple)](https://developer.apple.com/documentation/uikit/updating-views-automatically-with-observation-tracking-in-uikit)
+
+## ライセンス
+
+[MIT](LICENSE)
