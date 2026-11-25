@@ -61,19 +61,11 @@ Action は関連値を持てるので、`AlertButton("3 つ", action: .ratingCho
 
 役割は SwiftUI の `ButtonRole` を直接持たず、自前の型で持つ。UIKit の `UIAlertAction.Style` にも読み替えられるようにするため。
 
-## 文言と多言語化
+## 文言
 
-タイトル、メッセージ、ボタンの文言は `DisplayText` で持つ([画面に出す文言](text.md))。
+タイトル、メッセージ、ボタンの文言は `String` で持ち、そのまま出す。テストでは `alert.title == "削除できませんでした"` のように比べる。
 
-```swift
-AlertState(title: "削除できませんでした")                  // 訳す。リテラルがキーになる
-AlertState(title: "「\(log.title)」を削除しますか?")       // 訳す。キーは「%@」を削除しますか?
-AlertState(title: serverMessage)                           // String の変数は、訳さずにそのまま出す
-AlertButton(bookTitle, action: .bookChosen(id))            // ボタンも同じ
-```
-
-訳が見つからなければキーをそのまま出すので、多言語に対応していないアプリでも同じように使える。
-テストでは `alert.title == "削除できませんでした"` のように比べる。`prettyState` でもキーを出すので、どの言語で動かしても同じ文字列になる。
+今の Rill は、多言語化に対応していない。String Catalog を前提にした多言語化は [#9](https://github.com/kz56cd/RillArchitectureSample/issues/9) で扱う。
 
 ## 扱わないもの
 
@@ -124,8 +116,8 @@ iOS 26 の iPhone では、確認ダイアログは押したボタンの近く�
 
 | テスト | 確かめること |
 |---|---|
-| `AlertTests`(Rill) | ボタンを押すと、閉じる Action のあとにボタンの Action を送る。Action の無いボタンは閉じるだけ。外を押すと閉じる Action を送る。ボタンと書き換えの順番によらず、閉じる Action は 1 回。役割を SwiftUI の役割に読み替える。文字列リテラルがキーになる。リテラルは訳し、`String` の変数はそのまま出す(`DisplayTextTests`) |
-| `PrettyPrinterTests`(Rill) | `AlertState` の文言をキーで出す |
+| `AlertTests`(Rill) | ボタンを押すと、閉じる Action のあとにボタンの Action を送る。Action の無いボタンは閉じるだけ。外を押すと閉じる Action を送る。ボタンと書き換えの順番によらず、閉じる Action は 1 回。役割を SwiftUI の役割に読み替える |
+| `PrettyPrinterTests`(Rill) | `AlertState` の文言を出す |
 | `LogDetailTests` | 「削除する」で確認ダイアログを出し、確かめるまでは消さない。確認で削除する。キャンセルは消さずに閉じる。削除に失敗したらアラートを出し、閉じると消える |
 
 「まだ出ているときだけ送る」確かめを外すと、`AlertTests` の順番を入れ替えたテストが両方落ちることを確かめてある。
@@ -135,8 +127,7 @@ iOS 26 の iPhone では、確認ダイアログは押したボタンの近く�
 - 確認ダイアログで「削除する」を押すと、削除して一覧へ戻る。
 - 外を押して閉じると、出直さず、もう一度押せば出る(2 回続けて確かめた)。
 - 削除に失敗するとアラートが出て、OK で閉じると出直さず、もう一度確認から始められる。
-- 英語の訳を足して英語で起動すると、アラートと確認ダイアログの文言が訳される。`.close` の役割のボタンも出る
-  (訳と `.close` のボタンは確かめるためだけに足したもので、見本には入れていない)。
+- `.close` の役割のボタンも出る(確かめるためだけに足したもので、見本には入れていない)。
 
 ## UIKit で使うとき
 
@@ -144,7 +135,7 @@ iOS 26 の iPhone では、確認ダイアログは押したボタンの近く�
 
 - ボタンは `UIAlertAction` にする。役割は `.cancel` → `.cancel`、`.destructive` → `.destructive`、それ以外(なし、`.confirm`、`.close`)→ `.default`。
   `.confirm` のボタンは `UIAlertController.preferredAction` にすると、意図が近くなる。
-- 文言は `alert.title.resolve()` で文字列にする。
+- 文言は `alert.title` をそのまま使う。
 - ボタンの処理では、閉じる Action を送ってから、ボタンの Action を送る。
 - 確認ダイアログは `preferredStyle: .actionSheet` にする。外を押して閉じたときは `.cancel` のボタンの処理が呼ばれる作りなので、`.cancel` のボタンが無ければ足し、その処理で閉じる Action を送る。
 

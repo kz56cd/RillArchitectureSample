@@ -35,9 +35,8 @@ targets: [
 Xcode では File → Add Package Dependencies… で `https://github.com/kz56cd/RillArchitectureSample.git` を入れ、ライブラリ `Rill` を選ぶ。
 
 - 1.0 になるまでは、0.1 → 0.2 のように 2 つ目の数が上がると書き方が変わることがある。`.upToNextMinor` で、上がる範囲を 0.1.x にとどめる。
-- 多言語化しないアプリでは、trait `NoLocalization` を選ぶ(`.package(url: ..., .upToNextMinor(from: "0.1.4"), traits: ["NoLocalization"])`)。
-  Xcode のプロジェクトでの選び方は、[画面に出す文言](docs/text.md) の「trait の選び方」にある。
 - 依存として使えるのは v0.1.3 から(パッケージの定義をリポジトリの直下に置いた版)。ライセンス(MIT)を付けたのは v0.1.4 から。
+- 今の Rill は多言語化に対応していない(画面に出す文言は `String` で持つ)。String Catalog を前提にした多言語化は [#9](https://github.com/kz56cd/RillArchitectureSample/issues/9) で扱う。
 
 ストアは MainActor で動かす前提なので、アプリのターゲットも既定の隔離を MainActor にする(Xcode の `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`)。
 
@@ -46,14 +45,10 @@ Xcode では File → Add Package Dependencies… で `https://github.com/kz56cd
 ```sh
 make generate              # project.yml から RillArchitectureSample.xcodeproj を作る(XcodeGen は mint で入れる)
 make test                  # アプリのストアと Rill パッケージのテスト(Swift Testing、シミュレーター)
-make test-rill             # Rill パッケージのテストだけ(swift test、macOS で手早く)。多言語化する設定としない設定の両方
+make test-rill             # Rill パッケージのテストだけ(swift test、macOS で手早く)
 make check-unidirectional  # 単一方向を破る書き方が、コンパイルエラーになることを確かめる
-make check-localization    # 多言語化する設定(trait なし)でも、アプリのソースが組めることを確かめる
 make check                 # 上のすべて
 ```
-
-見本のアプリは日本語だけなので、多言語化しない設定(Rill パッケージの trait `NoLocalization`)で動かしている
-([画面に出す文言](docs/text.md) の「多言語化しないアプリ」)。多言語化する設定で作るときは、`make generate RILL_TRAITS=` と trait を空にする。
 
 `RillArchitectureSample.xcodeproj` を開いて実行すると、ログイン → 記録する → 一覧を触れる。
 保存先はメモリの中だけなので、アプリを終えると記録は消える。ユーザー ID に `error` と入れるとログインに失敗する。
@@ -68,7 +63,6 @@ make check                 # 上のすべて
 | [4 つの条件をどこで確かめるか](docs/requirements.md) | 条件ごとの決まりと、確かめているテスト・検査。状態の pretty print |
 | [ディープリンク](docs/deeplink.md) | URL から画面を開く流れ、アーキテクチャで保証されること、テスト |
 | [通知(NotificationCenter)](docs/notifications.md) | 通知を Action として受ける。何に使い、何に使わないか |
-| [画面に出す文言(DisplayText)](docs/text.md) | 訳す文言と、そのまま出す文言を 1 つの型で扱う |
 | [アラートと確認ダイアログ](docs/alerts.md) | 中身を値で持って状態から出す。閉じるときの決まり |
 | [UIKit で使う](docs/uikit.md) | SwiftUI との対応、書き方の例、気をつけること |
 | [ほかのアーキテクチャとの比較](docs/comparison.md) | Flux との違い、LUCA との違い |
@@ -95,7 +89,7 @@ flowchart LR
 | ディレクトリ | 中身 |
 |---|---|
 | `Package.swift` | Rill パッケージの定義。依存として使えるよう、リポジトリの直下に置く。本体は `Packages/Rill` にある |
-| `Packages/Rill/Sources/Rill/Core` | アーキテクチャの決まりそのもの。`Composable`(LUCA をもとに `State` を足したもの)、`DependencyClient`、`PrettyPrinter`、画面に出す文言(`DisplayText`) |
+| `Packages/Rill/Sources/Rill/Core` | アーキテクチャの決まりそのもの。`Composable`(LUCA をもとに `State` を足したもの)、`DependencyClient`、`PrettyPrinter` |
 | `Packages/Rill/Sources/Rill/Support` | 決まりを守ったまま使うための補助。画面の遷移(シート、push、タブ)の Binding、アラートと確認ダイアログ(`AlertState`)、ディープリンクの受け口、通知を `AsyncStream` で受ける依存(`NotificationClient`) |
 | `Packages/Rill/Tests/RillTests` | パッケージのテスト |
 | `RillArchitectureSample/Dependencies` | `AppDependencies`、`AuthClient`、`ReadingLogClient`、ストアが受ける通知の名前 |
