@@ -40,6 +40,7 @@ make check                 # 上の 2 つ
 | [構造の図](docs/architecture.md) | 層と依存の向き、1 つの画面の中の流れ、画面とストアの木、親子・兄弟の連携、push と戻り方、シートの閉じ方 |
 | [4 つの条件をどこで確かめるか](docs/requirements.md) | 条件ごとの決まりと、確かめているテスト・検査。状態の pretty print |
 | [ディープリンク](docs/deeplink.md) | URL から画面を開く流れ、アーキテクチャで保証されること、テスト |
+| [通知(NotificationCenter)](docs/notifications.md) | 通知を Action として受ける。何に使い、何に使わないか |
 | [UIKit で使う](docs/uikit.md) | SwiftUI との対応、書き方の例、気をつけること |
 | [ほかのアーキテクチャとの比較](docs/comparison.md) | Flux との違い、LUCA との違い |
 
@@ -64,9 +65,9 @@ flowchart LR
 
 | ディレクトリ | 中身 |
 |---|---|
-| `Packages/Rill/Sources/Rill` | `Composable`(LUCA をもとに `State` を足したもの)、`DependencyClient`、`PrettyPrinter`、画面の遷移(シート、push、タブ)の Binding の補助、ディープリンクの受け口 |
+| `Packages/Rill/Sources/Rill` | `Composable`(LUCA をもとに `State` を足したもの)、`DependencyClient`、`PrettyPrinter`、画面の遷移(シート、push、タブ)の Binding の補助、ディープリンクの受け口、通知を `AsyncStream` で受ける依存(`NotificationClient`) |
 | `Packages/Rill/Tests/RillTests` | パッケージのテスト |
-| `RillArchitectureSample/Dependencies` | `AppDependencies`、`AuthClient`、`ReadingLogClient` |
+| `RillArchitectureSample/Dependencies` | `AppDependencies`、`AuthClient`、`ReadingLogClient`、ストアが受ける通知の名前 |
 | `RillArchitectureSample/Models` | 読書の記録と、入力の確かめ、ディープリンクの行き先(`AppLink`) |
 | `RillArchitectureSample/Stores` | 画面ごとのストア |
 | `RillArchitectureSample/Views` | 画面ごとの View |
@@ -85,6 +86,8 @@ flowchart LR
 
 ディープリンクも、この決まりの組み合わせで守られる。URL を行き先の値にして一番上のストアへ Action として送り、
 各ストアが自分の状態を変えてから子へ `send` で渡す([ディープリンク](docs/deeplink.md))。
+NotificationCenter の通知も、`AsyncStream` にして Action として受ける。使うのはアプリの外から来る出来事だけで、
+画面どうしの連携には使わない([通知](docs/notifications.md))。
 
 ## 気づいたこと
 

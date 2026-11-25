@@ -23,6 +23,7 @@
 		8074B3F6EC319CFCC456DE6D /* AppRootTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92621F92E7AAA282EA6113B3 /* AppRootTests.swift */; };
 		8A07787839EA2003A3404168 /* LogFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBB9579C06D8CC193EE2C35 /* LogFilter.swift */; };
 		9032F01CD1C0259A0813835F /* AppDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E80E4D1AF4C17971F89488B /* AppDependencies.swift */; };
+		AB6FDB949AA2123BEBDA27DC /* AppNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9853C856A03A9E3081619B6 /* AppNotifications.swift */; };
 		B2614FCA2BDFDA8FB34F35C9 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E13E129999004941E1114EF /* LoginView.swift */; };
 		B2E1747356416CB60C18B1A1 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = E144C277B6A6BF1DB95D69CD /* Login.swift */; };
 		BA85DE8B24767538DC856C19 /* HomeTabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 645B00B21AFC861F6D13E488 /* HomeTabs.swift */; };
@@ -73,6 +74,7 @@
 		B49204710E90FA904D04A751 /* AppLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLink.swift; sourceTree = "<group>"; };
 		BAF5842CEE9CB49B47736755 /* AppRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootView.swift; sourceTree = "<group>"; };
 		D2CCB8707FD0725392CEA356 /* AuthClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthClient.swift; sourceTree = "<group>"; };
+		D9853C856A03A9E3081619B6 /* AppNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNotifications.swift; sourceTree = "<group>"; };
 		DD71B056281F25BBB2BA5262 /* ReadingLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingLog.swift; sourceTree = "<group>"; };
 		DF9DD3116339C4DCFCFCAAEE /* LogListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogListView.swift; sourceTree = "<group>"; };
 		E144C277B6A6BF1DB95D69CD /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 			isa = PBXGroup;
 			children = (
 				0E80E4D1AF4C17971F89488B /* AppDependencies.swift */,
+				D9853C856A03A9E3081619B6 /* AppNotifications.swift */,
 				D2CCB8707FD0725392CEA356 /* AuthClient.swift */,
 				1C18BD006C67908DCAD8B8C4 /* ReadingLogClient.swift */,
 			);
@@ -283,6 +286,7 @@
 			files = (
 				9032F01CD1C0259A0813835F /* AppDependencies.swift in Sources */,
 				C6A85C312AC3FB492E83134B /* AppLink.swift in Sources */,
+				AB6FDB949AA2123BEBDA27DC /* AppNotifications.swift in Sources */,
 				11F5011B47EF16D216AF28D1 /* AppRoot.swift in Sources */,
 				444D932BAA82003260674482 /* AppRootView.swift in Sources */,
 				597695EAD8158DADFE4D31B2 /* AuthClient.swift in Sources */,

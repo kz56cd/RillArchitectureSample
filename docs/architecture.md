@@ -18,14 +18,14 @@ flowchart TB
             S["AppRoot / HomeTabs / NewLog / LogList ..."]
         end
         subgraph Dependencies["Dependencies(DependencyClient)"]
-            D["AppDependencies<br/>AuthClient / ReadingLogClient"]
+            D["AppDependencies<br/>AuthClient / ReadingLogClient / NotificationClient"]
         end
         subgraph Models["Models(値の型)"]
             M["ReadingLog / ReadingLogDraft"]
         end
     end
     subgraph Package["Rill パッケージ"]
-        P["Composable / DependencyClient / PrettyPrinter<br/>testDependency / presentation / navigationPath / binding<br/>IdentityHashable / DeepLink / onDeepLink"]
+        P["Composable / DependencyClient / PrettyPrinter<br/>testDependency / presentation / navigationPath / binding<br/>IdentityHashable / DeepLink / onDeepLink / NotificationClient"]
     end
     Live["liveValue<br/>(本番。見本ではメモリの保存先)"]
     Test["testValue<br/>(テストで差し替える)"]
@@ -166,3 +166,7 @@ sequenceDiagram
 ## ディープリンク
 
 URL も、一番上のストアへの Action として受ける。流れの図は [ディープリンク](deeplink.md) にある。
+
+## 通知
+
+NotificationCenter の通知も、`AsyncStream` にしてストアの Action として受ける。流れの図は [通知](notifications.md) にある。

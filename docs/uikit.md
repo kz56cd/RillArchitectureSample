@@ -19,6 +19,7 @@
 | シート | `.sheet(item: store.presentation(\.state.filter, dismiss: .filterDismissed))` | `updateProperties()` で `state.filter` を見て `present` / `dismiss` する。スワイプで閉じたら `presentationControllerDidDismiss` で `.filterDismissed` を送る |
 | タブ | `TabView(selection: store.binding(\.state.selectedTab, send: { .tabSelected($0) }))` | `UITabBarController`。`tabBarController(_:shouldSelect:)` で `false` を返して `.tabSelected` を送り、`updateProperties()` で `selectedIndex` を合わせる |
 | 画面の切り替え | `switch store.state.screen` | `AppRoot.state.screen` を見て `rootViewController` を差し替える |
+| 通知 | `.task { await store.send(.observeNotifications) }` | 受け取りの `Task` を ViewController が持ち、`viewDidAppear` で始めて `viewDidDisappear` で取り消す |
 | ディープリンク | `.onDeepLink(AppLink.self, to: store) { .deepLinkOpened($0) }` | `scene(_:openURLContexts:)` と `scene(_:continue:)` で URL を受け、`store.open(url, as: AppLink.self) { .deepLinkOpened($0) }` を呼ぶ |
 
 ## 書き方の例

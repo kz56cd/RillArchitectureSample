@@ -48,6 +48,8 @@ struct LogListView: View {
             }
         }
         .task { await store.send(.task) }
+        // 通知は、画面が出ている間だけ受ける。画面が消えると取り消され、受け取りも止まる。
+        .task { await store.send(.observeNotifications) }
         .navigationDestination(for: LogList.Destination.self) { destination in
             switch destination {
             case let .detail(detail):

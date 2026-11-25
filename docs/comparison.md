@@ -43,6 +43,8 @@ flowchart LR
 `AppDependencies` に入れて各画面のストアへ渡す形が合う。LUCA の `AppStateClient` も同じ考え方。
 画面のストアは、その Store を読み書きする「入口」になる。
 
+NotificationCenter で画面どうしをつなぐのは、Dispatcher に近い形になるので勧めない。通知は、アプリの外から来る出来事を受けるのにだけ使う([通知](notifications.md))。
+
 ## LUCA との違い
 
 - LUCA の 3 つのモジュール(UserInterface、Model、DataSource)への分割、`Scene` の層、`AppStateClient` は入れていない(この見本の規模では要らない)。

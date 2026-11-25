@@ -66,3 +66,23 @@ extension LogList {
         return detail
     }
 }
+
+/// 依存が返す記録。テストの途中で差し替える
+actor StoredLogs {
+
+    // MARK: Properties
+
+    private(set) var logs: [ReadingLog]
+
+    // MARK: Initializers
+
+    init(_ logs: [ReadingLog]) {
+        self.logs = logs
+    }
+
+    // MARK: Functions
+
+    func replace(with logs: [ReadingLog]) {
+        self.logs = logs
+    }
+}

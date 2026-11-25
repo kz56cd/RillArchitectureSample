@@ -186,4 +186,36 @@ struct LogListTests {
         #expect(sut.state.path.isEmpty)
         #expect(sut.state.linkedLogMissing)
     }
+
+    // MARK: 通知
+
+    @Test func send_observeNotifications_アプリが前面に来るたびに読み込み直し_取り消すと止める() async {
+        let center = NotificationCenter()
+        let stored = StoredLogs([ReadingLog.fixture(title: "一冊目")])
+        let readingLogClient = testDependency(of: ReadingLogClient.self) {
+            $0.fetchAll = { await stored.logs }
+        }
+        let sut = LogList(.testDependencies(readingLogClient: readingLogClient, notificationClient: .center(center)))
+        let observing = Task { await sut.send(.observeNotifications) }
+
+        // ほかの所で記録が変わったあと、アプリが前面に来た。
+        let changed = [ReadingLog.fixture(title: "二冊目")]
+        await stored.replace(with: changed)
+        // 受け始めるまでに送った通知は届かないので、変わるまで送る。
+        for _ in 0 ..< 100 where sut.state.logs != changed {
+            center.post(name: .appBecameActive, object: nil)
+            await Task.yield()
+        }
+        #expect(sut.state.logs == changed)
+
+        // 画面が消えると(タスクが取り消されると)、send が終わり、通知を受けなくなる。
+        observing.cancel()
+        await observing.value
+        await stored.replace(with: [])
+        center.post(name: .appBecameActive, object: nil)
+        for _ in 0 ..< 100 {
+            await Task.yield()
+        }
+        #expect(sut.state.logs == changed)
+    }
 }

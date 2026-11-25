@@ -6,6 +6,7 @@ import Observation
 /// 記録の一覧を持つ。記録を選ぶと、詳しい画面を子のストアとして `path` に積む(push)。
 /// 絞り込みの画面は、子のストア(`filter`)としてシートで出す。
 /// ディープリンクで記録が指定されたら、ほかの画面を閉じて、その記録の詳しい画面だけを積む。
+/// アプリが前面に来たら(通知)、記録を読み込み直す。
 @Observable
 final class LogList: Composable {
 
@@ -62,6 +63,16 @@ final class LogList: Composable {
             } catch {
                 await send(.fetchResponse(.failure(error)))
             }
+
+        case .observeNotifications:
+            // 画面が消えるまで(View の `.task` が取り消されるまで)受け続ける。
+            for await _ in appDependencies.notificationClient.notifications(named: .appBecameActive) {
+                await send(.appBecameActive)
+            }
+
+        case .appBecameActive:
+            // ほかの所で記録が変わっているかもしれないので、読み込み直す。
+            await send(.task)
 
         case let .fetchResponse(.success(logs)):
             state.logs = logs
@@ -128,6 +139,10 @@ final class LogList: Composable {
 
     enum Action: Sendable {
         case task
+        /// 通知を受け始める。View の `.task` から送る
+        case observeNotifications
+        /// アプリが前面に来た(通知)
+        case appBecameActive
         case fetchResponse(Result<[ReadingLog], any Error>)
         /// 兄弟(記録する画面)で保存した記録。親の HomeTabs が中継して送る
         case logAdded(ReadingLog)
