@@ -63,15 +63,17 @@ Action は関連値を持てるので、`AlertButton("3 つ", action: .ratingCho
 
 ## 文言と多言語化
 
-タイトル、メッセージ、ボタンの文言は `LocalizedStringResource` で持つ。文字列リテラルをそのまま書けば、それがキーになり、
-`Localizable.xcstrings` の訳が使われる。SwiftUI の `Text("...")` や `Button("...")` と同じ扱いになる。
+タイトル、メッセージ、ボタンの文言は `DisplayText` で持つ([画面に出す文言](text.md))。
 
 ```swift
-AlertState(title: "削除できませんでした")   // キーは "削除できませんでした"
+AlertState(title: "削除できませんでした")                  // 訳す。リテラルがキーになる
+AlertState(title: "「\(log.title)」を削除しますか?")       // 訳す。キーは「%@」を削除しますか?
+AlertState(title: serverMessage)                           // String の変数は、訳さずにそのまま出す
+AlertButton(bookTitle, action: .bookChosen(id))            // ボタンも同じ
 ```
 
-テストでは `alert.title.key == "削除できませんでした"` のようにキーで比べる。`prettyState` でもキーだけを出すので、
-どの言語で動かしても同じ文字列になる。
+訳が見つからなければキーをそのまま出すので、多言語に対応していないアプリでも同じように使える。
+テストでは `alert.title == "削除できませんでした"` のように比べる。`prettyState` でもキーを出すので、どの言語で動かしても同じ文字列になる。
 
 ## 扱わないもの
 
@@ -122,8 +124,8 @@ iOS 26 の iPhone では、確認ダイアログは押したボタンの近く�
 
 | テスト | 確かめること |
 |---|---|
-| `AlertTests`(Rill) | ボタンを押すと、閉じる Action のあとにボタンの Action を送る。Action の無いボタンは閉じるだけ。外を押すと閉じる Action を送る。ボタンと書き換えの順番によらず、閉じる Action は 1 回。役割を SwiftUI の役割に読み替える。文字列リテラルがキーになる |
-| `PrettyPrinterTests`(Rill) | `LocalizedStringResource` はキーだけを出す。`AlertState` の文言もキーで出す |
+| `AlertTests`(Rill) | ボタンを押すと、閉じる Action のあとにボタンの Action を送る。Action の無いボタンは閉じるだけ。外を押すと閉じる Action を送る。ボタンと書き換えの順番によらず、閉じる Action は 1 回。役割を SwiftUI の役割に読み替える。文字列リテラルがキーになる。リテラルは訳し、`String` の変数はそのまま出す(`DisplayTextTests`) |
+| `PrettyPrinterTests`(Rill) | `AlertState` の文言をキーで出す |
 | `LogDetailTests` | 「削除する」で確認ダイアログを出し、確かめるまでは消さない。確認で削除する。キャンセルは消さずに閉じる。削除に失敗したらアラートを出し、閉じると消える |
 
 「まだ出ているときだけ送る」確かめを外すと、`AlertTests` の順番を入れ替えたテストが両方落ちることを確かめてある。
@@ -142,7 +144,7 @@ iOS 26 の iPhone では、確認ダイアログは押したボタンの近く�
 
 - ボタンは `UIAlertAction` にする。役割は `.cancel` → `.cancel`、`.destructive` → `.destructive`、それ以外(なし、`.confirm`、`.close`)→ `.default`。
   `.confirm` のボタンは `UIAlertController.preferredAction` にすると、意図が近くなる。
-- 文言は `String(localized: alert.title)` で文字列にする。
+- 文言は `alert.title.resolve()` で文字列にする。
 - ボタンの処理では、閉じる Action を送ってから、ボタンの Action を送る。
 - 確認ダイアログは `preferredStyle: .actionSheet` にする。外を押して閉じたときは `.cancel` のボタンの処理が呼ばれる作りなので、`.cancel` のボタンが無ければ足し、その処理で閉じる Action を送る。
 

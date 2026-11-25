@@ -124,6 +124,11 @@ struct PrettyPrinterTests {
         #expect(PrettyPrinter.format(resource) == "\"削除できませんでした\"")
     }
 
+    @Test func format_DisplayText_訳す文言はキーを_そのまま出す文言はverbatimで出す() {
+        #expect(PrettyPrinter.format(DisplayText("削除できませんでした")) == "\"削除できませんでした\"")
+        #expect(PrettyPrinter.format(DisplayText("混み合っています" as String)) == "verbatim(\"混み合っています\")")
+    }
+
     @Test func format_AlertState_文言はキーで出す() {
         let alert = AlertState<Counter.Action>(
             title: "数を 0 に戻しますか?",

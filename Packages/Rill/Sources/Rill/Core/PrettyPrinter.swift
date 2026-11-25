@@ -51,6 +51,14 @@ public enum PrettyPrinter {
         case let resource as LocalizedStringResource:
             // 中身(表、ロケール、バンドルなど)は並べず、キーだけを出す。どの言語で動かしても同じ文字列になる。
             return resource.key.debugDescription
+        case let text as DisplayText:
+            // 訳す文言はキーを、そのまま出す文言は verbatim と分かるように出す。
+            switch text {
+            case let .localized(resource):
+                return resource.key.debugDescription
+            case let .verbatim(string):
+                return "verbatim(\(string.debugDescription))"
+            }
         default:
             break
         }

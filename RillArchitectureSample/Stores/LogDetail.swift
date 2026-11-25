@@ -39,7 +39,8 @@ final class LogDetail: Composable, nonisolated IdentityHashable {
         switch action {
         case .deleteButtonTapped:
             state.confirmation = AlertState(
-                title: "この記録を削除しますか?",
+                // 本の名前を埋め込む。訳すときのキーは「%@」を削除しますか? になる。
+                title: "「\(state.log.title)」を削除しますか?",
                 message: "削除すると、元に戻せません。",
                 buttons: [
                     AlertButton("削除する", role: .destructive, action: .deleteConfirmed),

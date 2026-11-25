@@ -15,25 +15,33 @@ import Foundation
 /// )
 /// ```
 ///
-/// 文言は `LocalizedStringResource` で持つので、`Localizable.xcstrings` で訳される。
-/// 文字列リテラルをそのまま書ける(リテラルがキーになる)。
+/// 文言は `DisplayText` で持つ。文字列リテラルは訳し(リテラルがキーになる)、`String` の変数は訳さずにそのまま出す。
 ///
 /// SwiftUI では `alert(store:state:dismiss:)`、`confirmationDialog(store:state:dismiss:)` で出す。
 nonisolated public struct AlertState<Action: Sendable>: Sendable {
 
     // MARK: Properties
 
-    public var title: LocalizedStringResource
-    public var message: LocalizedStringResource?
+    public var title: DisplayText
+    public var message: DisplayText?
     /// 空なら、閉じるだけの「OK」を出す。
     public var buttons: [AlertButton<Action>]
 
     // MARK: Initializers
 
-    public init(title: LocalizedStringResource, message: LocalizedStringResource? = nil, buttons: [AlertButton<Action>] = []) {
+    public init(title: DisplayText, message: DisplayText? = nil, buttons: [AlertButton<Action>] = []) {
         self.title = title
         self.message = message
         self.buttons = buttons
+    }
+
+    /// タイトルを、訳さずにそのまま出す。サーバーから届いた文言などに使う
+    ///
+    /// メッセージも `String` の変数で渡すときは、`DisplayText(message)` と書く。
+    /// メッセージに文字列リテラルを書いたときに、訳さない扱いへ黙って変わらないようにするため。
+    @_disfavoredOverload
+    public init<S: StringProtocol>(title: S, message: DisplayText? = nil, buttons: [AlertButton<Action>] = []) {
+        self.init(title: DisplayText(title), message: message, buttons: buttons)
     }
 }
 
@@ -54,17 +62,23 @@ nonisolated public struct AlertButton<Action: Sendable>: Sendable {
 
     // MARK: Properties
 
-    public var title: LocalizedStringResource
+    public var title: DisplayText
     public var role: Role?
     /// 押したときに送る Action。nil なら閉じるだけ
     public var action: Action?
 
     // MARK: Initializers
 
-    public init(_ title: LocalizedStringResource, role: Role? = nil, action: Action? = nil) {
+    public init(_ title: DisplayText, role: Role? = nil, action: Action? = nil) {
         self.title = title
         self.role = role
         self.action = action
+    }
+
+    /// 文言を、訳さずにそのまま出す。データから作るボタンなどに使う
+    @_disfavoredOverload
+    public init<S: StringProtocol>(_ title: S, role: Role? = nil, action: Action? = nil) {
+        self.init(DisplayText(title), role: role, action: action)
     }
 }
 

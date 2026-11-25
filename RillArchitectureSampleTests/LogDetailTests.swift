@@ -17,7 +17,8 @@ struct LogDetailTests {
         await sut.send(.deleteButtonTapped)
 
         let confirmation = try #require(sut.state.confirmation)
-        #expect(confirmation.buttons.map(\.title.key) == ["削除する", "キャンセル"])
+        #expect(confirmation.title.resolve() == "「見本の本」を削除しますか?")
+        #expect(confirmation.buttons.map(\.title) == ["削除する", "キャンセル"])
         #expect(confirmation.buttons.map(\.role) == [.destructive, .cancel])
         // 確かめるまでは消さない。
         #expect(deleted.values.isEmpty)
@@ -68,7 +69,7 @@ struct LogDetailTests {
         await sut.send(.deleteConfirmed)
 
         let alert = try #require(sut.state.alert)
-        #expect(alert.title.key == "削除できませんでした")
+        #expect(alert.title == "削除できませんでした")
         #expect(alert.buttons.isEmpty)
         #expect(sut.state.isDeleting == false)
 

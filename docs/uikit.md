@@ -14,12 +14,13 @@
 | 状態を読んで描く | `body` で `store.state` を読む | `updateProperties()` で `store.state` を読む。iOS 26 の UIKit は、そこで読んだ Observable の値を追い、変わると呼び直す |
 | 操作を送る | `Button { Task { await store.send(...) } }` | `UIAction { _ in Task { await store.send(...) } }` |
 | 入力欄(例外) | `$store.draft.title` で束縛する | `.editingChanged` で `store.draft.title = text` を同期で書く |
+| 文言(`DisplayText`) | `Text(store.state.title)` | `label.text = store.state.title.resolve()` |
 | 子の画面 | 子の View に子のストアを渡す | 子の ViewController に子のストアを渡す |
 | push | `NavigationStack(path: store.navigationPath(\.state.path, pop: { .pathPopped(count: $0) }))` | `updateProperties()` で `state.path` と表示中の ViewController の並びを比べ、違えば `setViewControllers` する。戻るボタンやスワイプで戻ったら、`UINavigationControllerDelegate` の `didShow` で `.pathPopped(count:)` を送る |
 | シート | `.sheet(item: store.presentation(\.state.filter, dismiss: .filterDismissed))` | `updateProperties()` で `state.filter` を見て `present` / `dismiss` する。スワイプで閉じたら `presentationControllerDidDismiss` で `.filterDismissed` を送る |
 | タブ | `TabView(selection: store.binding(\.state.selectedTab, send: { .tabSelected($0) }))` | `UITabBarController`。`tabBarController(_:shouldSelect:)` で `false` を返して `.tabSelected` を送り、`updateProperties()` で `selectedIndex` を合わせる |
 | 画面の切り替え | `switch store.state.screen` | `AppRoot.state.screen` を見て `rootViewController` を差し替える |
-| アラート、確認ダイアログ | `.alert(store: store, state: \.state.alert, dismiss: .alertDismissed)` | `updateProperties()` で `state.alert` を見て `UIAlertController` を出し入れする。文言は `String(localized:)` で文字列にする。ボタンの処理で、閉じる Action を送ってからボタンの Action を送る |
+| アラート、確認ダイアログ | `.alert(store: store, state: \.state.alert, dismiss: .alertDismissed)` | `updateProperties()` で `state.alert` を見て `UIAlertController` を出し入れする。文言は `resolve()` で文字列にする。ボタンの処理で、閉じる Action を送ってからボタンの Action を送る |
 | 通知 | `.task { await store.send(.observeNotifications) }` | 受け取りの `Task` を ViewController が持ち、`viewDidAppear` で始めて `viewDidDisappear` で取り消す |
 | ディープリンク | `.onDeepLink(AppLink.self, to: store) { .deepLinkOpened($0) }` | `scene(_:openURLContexts:)` と `scene(_:continue:)` で URL を受け、`store.open(url, as: AppLink.self) { .deepLinkOpened($0) }` を呼ぶ |
 

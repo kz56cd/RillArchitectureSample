@@ -93,9 +93,9 @@ struct AlertTests {
             buttons: [AlertButton("戻す", role: .confirm, action: .resetConfirmed)]
         )
 
-        #expect(alert.title.key == "数を 0 に戻しますか?")
-        #expect(alert.message?.key == "元に戻せません。")
-        #expect(alert.buttons[0].title.key == "戻す")
+        #expect(alert.title == "数を 0 に戻しますか?")
+        #expect(alert.message == "元に戻せません。")
+        #expect(alert.buttons[0].title == "戻す")
     }
 }
 
