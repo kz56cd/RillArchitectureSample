@@ -19,11 +19,12 @@ final class Recorder<Value> {
 ///
 /// `reduce` と親への通知が、どの順に呼ばれたかを `events` に溜める。
 @Observable
-final class Counter: Composable {
+final class Counter: Composable, nonisolated IdentityHashable {
 
     struct State {
         var count = 0
         var child: Counter?
+        var path: [Counter] = []
     }
 
     enum Event: Equatable {
@@ -77,6 +78,12 @@ final class Counter: Composable {
 
         case .childDismissed:
             state.child = nil
+
+        case .pushButtonTapped:
+            state.path.append(Counter())
+
+        case let .pathPopped(count):
+            state.path.removeLast(state.path.count - count)
         }
     }
 
@@ -87,6 +94,8 @@ final class Counter: Composable {
         case loadResponse(Int)
         case openChildButtonTapped
         case childDismissed
+        case pushButtonTapped
+        case pathPopped(count: Int)
     }
 }
 

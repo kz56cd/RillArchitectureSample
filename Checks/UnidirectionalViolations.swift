@@ -13,7 +13,8 @@ func violations(root: AppRoot, newLog: NewLog, form: LogForm, logList: LogList, 
     form.state.invalidFields = [] // expected-error
     form.state.isSaving = true // expected-error
     logList.state.logs = [] // expected-error
-    logList.state.detail = nil // expected-error
+    logList.state.path = [] // expected-error
+    logList.state.filter = nil // expected-error
     detail.state.isDeleting = true // expected-error
     // 入力欄の値も、state からは書き換えられない。例外の `form.draft` を通す。
     form.state.draft = ReadingLogDraft() // expected-error
@@ -23,9 +24,13 @@ struct ViolatingView: View {
     @Bindable var store: LogList
 
     var body: some View {
-        // シートを `$store.state.detail` で束縛すると、SwiftUI が状態を直接 nil にしてしまう。
-        // `store.presentation(\.state.detail, dismiss: .detailDismissed)` を使う。
-        Text("")
-            .sheet(item: $store.state.detail) { LogDetailView(store: $0) } // expected-error
+        // 積んだ画面を `$store.state.path` で束縛すると、戻ったときに SwiftUI が状態を直接短くしてしまう。
+        // `store.navigationPath(\.state.path, pop: { .pathPopped(count: $0) })` を使う。
+        NavigationStack(path: $store.state.path) { // expected-error
+            // シートを `$store.state.filter` で束縛すると、SwiftUI が状態を直接 nil にしてしまう。
+            // `store.presentation(\.state.filter, dismiss: .filterDismissed)` を使う。
+            Text("")
+                .sheet(item: $store.state.filter) { LogFilterView(store: $0) } // expected-error
+        }
     }
 }

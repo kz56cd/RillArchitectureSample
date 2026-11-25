@@ -25,7 +25,7 @@ flowchart TB
         end
     end
     subgraph Package["Rill パッケージ"]
-        P["Composable / DependencyClient / PrettyPrinter<br/>testDependency / presentation"]
+        P["Composable / DependencyClient / PrettyPrinter<br/>testDependency / presentation / navigationPath / IdentityHashable"]
     end
     Live["liveValue<br/>(本番。見本ではメモリの保存先)"]
     Test["testValue<br/>(テストで差し替える)"]
@@ -37,7 +37,7 @@ flowchart TB
     V & S & D -.-> M
     S -- "準拠する" --> P
     D -- "準拠する" --> P
-    V -- "presentation を使う" --> P
+    V -- "presentation、navigationPath を使う" --> P
 ```
 
 ## 1 つの画面の中の流れ(単一方向)
@@ -69,7 +69,8 @@ flowchart TD
     HomeTabs -- "newLog" --> NewLog["NewLog<br/>入力中と保存したあとを出し分ける"]
     HomeTabs -- "logList" --> LogList["LogList<br/>記録の一覧"]
     NewLog -- "phase = .editing" --> LogForm["LogForm<br/>入力欄と保存"]
-    LogList -- "detail(シート)" --> LogDetail["LogDetail<br/>記録の詳しい画面"]
+    LogList -- "path(push)" --> LogDetail["LogDetail<br/>記録の詳しい画面"]
+    LogList -- "filter(シート)" --> LogFilter["LogFilter<br/>評価で絞り込む"]
 ```
 
 ## 親子の間のやり取り
@@ -124,6 +125,27 @@ sequenceDiagram
     Note over F,T: このあと .saveButtonTapped も、同じ道筋で親へ届く(結果が先、押した操作があと)
 ```
 
+## 画面を積む(push)、戻る:戻ったときも Action を通す
+
+積むのは `reduce` だけ。SwiftUI が戻したとき(戻るボタン、端からのスワイプ)は、`navigationPath` の Binding が残った画面の数を Action にして送る。
+
+```mermaid
+sequenceDiagram
+    participant V as LogListView
+    participant S as SwiftUI の NavigationStack
+    participant B as navigationPath の Binding
+    participant L as LogList
+
+    V->>L: send(.logTapped(記録))
+    L->>L: reduce: path に .detail(LogDetail) を積む
+    L-->>S: Observation で描き直す(詳しい画面へ進む)
+    S->>B: 戻るボタンや端からのスワイプで set(短い path)
+    B->>L: Task { send(.pathPopped(count: 0)) }
+    L->>L: reduce: path を 0 個まで取り除く
+```
+
+子(`LogDetail`)で記録を削除したときは、親の `LogList` が `.detail(.deleteResponse(.success))` として受けて、その画面を `path` から取り除く。
+
 ## シートを閉じる:スワイプでも Action を通す
 
 ```mermaid
@@ -133,9 +155,10 @@ sequenceDiagram
     participant L as LogList
 
     S->>B: 下へのスワイプで set(nil)
-    B->>L: Task { send(.detailDismissed) }
-    L->>L: reduce: detail = nil
+    B->>L: Task { send(.filterDismissed) }
+    L->>L: reduce: filter = nil
     L-->>S: Observation で描き直す
 ```
 
-「閉じる」ボタンのときは、子(`LogDetail`)が `send(.closeButtonTapped)` し、親の `LogList` が `.detail(.closeButtonTapped)` として受けて `detail = nil` にする。
+評価を選んだときや「キャンセル」のときは、子(`LogFilter`)が `send(.ratingSelected(...))` / `send(.cancelButtonTapped)` し、
+親の `LogList` が `.filter(...)` として受けて `filter = nil` にする。

@@ -3,7 +3,7 @@
 [README に戻る](../README.md)
 
 使える。ストア、依存、テストは UI の仕組みに依存しないので、そのまま使える。変わるのは View の層だけ。
-(`Rill` パッケージで SwiftUI を使っているのは、シートの Binding の補助の `presentation` だけ。)
+(`Rill` パッケージで SwiftUI を使っているのは、画面の遷移の Binding の補助の `presentation` と `navigationPath` だけ。)
 
 見本には UIKit の画面を含めていない。下のコードは、アプリのソースと一緒に型検査が通ることだけを確かめた概要で、動かしてはいない。
 
@@ -15,7 +15,8 @@
 | 操作を送る | `Button { Task { await store.send(...) } }` | `UIAction { _ in Task { await store.send(...) } }` |
 | 入力欄(例外) | `$store.draft.title` で束縛する | `.editingChanged` で `store.draft.title = text` を同期で書く |
 | 子の画面 | 子の View に子のストアを渡す | 子の ViewController に子のストアを渡す |
-| シート | `.sheet(item: store.presentation(\.state.detail, dismiss: .detailDismissed))` | `updateProperties()` で `state.detail` を見て `present` / `dismiss` する。スワイプで閉じたら `presentationControllerDidDismiss` で `.detailDismissed` を送る |
+| push | `NavigationStack(path: store.navigationPath(\.state.path, pop: { .pathPopped(count: $0) }))` | `updateProperties()` で `state.path` と表示中の ViewController の並びを比べ、違えば `setViewControllers` する。戻るボタンやスワイプで戻ったら、`UINavigationControllerDelegate` の `didShow` で `.pathPopped(count:)` を送る |
+| シート | `.sheet(item: store.presentation(\.state.filter, dismiss: .filterDismissed))` | `updateProperties()` で `state.filter` を見て `present` / `dismiss` する。スワイプで閉じたら `presentationControllerDidDismiss` で `.filterDismissed` を送る |
 | タブ、画面の切り替え | `TabView`、`switch store.state.screen` | `UITabBarController`。`AppRoot.state.screen` を見て `rootViewController` を差し替える |
 
 ## 書き方の例
@@ -50,18 +51,47 @@ final class LogFormViewController: UIViewController {
     }
 }
 
-final class LogListViewController: UIViewController, UIAdaptivePresentationControllerDelegate {
+final class LogListViewController: UIViewController, UINavigationControllerDelegate, UIAdaptivePresentationControllerDelegate {
 
     private let store: LogList
 
-    // init(store:) は省略
+    // init(store:) は省略。この画面を UINavigationController の一番下に置き、その delegate を self にする。
 
     override func updateProperties() {
         super.updateProperties()
-        // 子のストアがあればシートを出し、無ければ閉じる。
-        switch (store.state.detail, presentedViewController) {
-        case let (detail?, nil):
-            let sheet = UINavigationController(rootViewController: LogDetailViewController(store: detail))
+        updatePath()
+        updateFilterSheet()
+    }
+
+    // 積んだ画面:状態の path と、表示中の画面の並びを比べ、違えば合わせる。
+    private func updatePath() {
+        guard let navigationController else { return }
+        let shown = navigationController.viewControllers.dropFirst().compactMap { $0 as? LogDetailViewController }
+        let details = store.state.path.map { destination in
+            switch destination {
+            case let .detail(detail): detail
+            }
+        }
+        guard shown.map(\.store) != details else { return }
+        // 表示中の画面は作り直さずに使う。
+        let viewControllers = details.map { detail in
+            shown.first { $0.store === detail } ?? LogDetailViewController(store: detail)
+        }
+        navigationController.setViewControllers([self] + viewControllers, animated: true)
+    }
+
+    // 戻るボタンや端からのスワイプで戻ったときも、状態を直接短くせず、残った画面の数を Action で送る。
+    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        let count = navigationController.viewControllers.count - 1
+        guard count < store.state.path.count else { return }
+        Task { await store.send(.pathPopped(count: count)) }
+    }
+
+    // 子のストアがあればシートを出し、無ければ閉じる。
+    private func updateFilterSheet() {
+        switch (store.state.filter, presentedViewController) {
+        case let (filter?, nil):
+            let sheet = UINavigationController(rootViewController: LogFilterViewController(store: filter))
             sheet.presentationController?.delegate = self
             present(sheet, animated: true)
         case (nil, .some):
@@ -73,19 +103,19 @@ final class LogListViewController: UIViewController, UIAdaptivePresentationContr
 
     // 下へのスワイプで閉じたときも、状態を直接 nil にせず Action を送る。
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        Task { await store.send(.detailDismissed) }
+        Task { await store.send(.filterDismissed) }
     }
 }
 ```
 
 ## 気をつけること
 
-- **状態から画面を出し入れする所は、自分で差分を見る。** SwiftUI は `state.detail` を渡せば出し入れまでしてくれるが、
+- **状態から画面を出し入れする所は、自分で差分を見る。** SwiftUI は `state.filter` や `state.path` を渡せば出し入れまでしてくれるが、
   UIKit では「今の状態」と「今出ている画面」を比べて `present` / `dismiss` / `push` / `pop` を呼ぶ必要がある。UIKit で一番手間がかかる所。
 - **iOS 26 より前で使うとき。** iOS 18 では Info.plist に `UIObservationTrackingEnabled` を `YES` で足すと、
   `viewWillLayoutSubviews()` などで読んだ値が追われる(`updateProperties()` は iOS 26 から)。
   iOS 17 では `withObservationTracking` で自分で購読し直す必要がある。
-- **`presentation` は SwiftUI 専用。** UIKit だけのアプリで使うなら、`presentation` を `Rill` から
+- **`presentation` と `navigationPath` は SwiftUI 専用。** UIKit だけのアプリで使うなら、この 2 つを `Rill` から
   別のターゲット(例:`RillSwiftUI`)へ分けると、`Rill` が SwiftUI に依存しなくなる。
 - **テストは変わらない。** ストアのテストは View を立ち上げないので、UIKit でも SwiftUI でも同じものが使える。
   SwiftUI と UIKit の画面を混ぜても、同じストアを渡せばよい。

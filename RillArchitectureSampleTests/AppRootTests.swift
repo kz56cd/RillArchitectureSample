@@ -66,7 +66,7 @@ struct AppRootTests {
         #expect(newLogin.userID.isEmpty)
     }
 
-    @Test func prettyState_アプリ全体の状態を1つの木で出す() async throws {
+    @Test func prettyState_積んだ画面も含めてアプリ全体の状態を1つの木で出す() async throws {
         let id = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
         let readingLogClient = testDependency(of: ReadingLogClient.self) {
             $0.save = { ReadingLog(id: id, input: $0, loggedAt: .distantPast) }
@@ -79,6 +79,8 @@ struct AppRootTests {
         form.draft = ReadingLogDraft(title: "見本の本", pages: "120", rating: "")
 
         await form.send(.saveButtonTapped)
+        let logList = try #require(sut.homeTabs?.state.logList)
+        await logList.send(.logTapped(logList.state.logs[0]))
 
         #expect(sut.prettyState == """
             AppRoot.State(
@@ -105,8 +107,24 @@ struct AppRootTests {
                         loggedAt: 0001-01-01 00:00:00 +0000
                       )
                     ],
-                    detail: nil,
-                    loadFailed: false
+                    loadFailed: false,
+                    minimumRating: nil,
+                    path: [
+                      .detail(
+                        LogDetail.State(
+                          log: ReadingLog(
+                            id: 00000000-0000-0000-0000-000000000001,
+                            title: "見本の本",
+                            pages: 120,
+                            rating: nil,
+                            loggedAt: 0001-01-01 00:00:00 +0000
+                          ),
+                          isDeleting: false,
+                          deleteFailed: false
+                        )
+                      )
+                    ],
+                    filter: nil
                   )
                 )
               )

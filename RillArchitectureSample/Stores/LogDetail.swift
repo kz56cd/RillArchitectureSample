@@ -2,8 +2,10 @@ import Rill
 import Observation
 
 /// 1 件の記録の詳しい画面のストア
+///
+/// 一覧から積む(push)。`NavigationStack` の path に入れるため、同じストアかどうかで比べる(`IdentityHashable`)。
 @Observable
-final class LogDetail: Composable, Identifiable {
+final class LogDetail: Composable, nonisolated IdentityHashable {
 
     struct State {
         let log: ReadingLog
@@ -32,10 +34,6 @@ final class LogDetail: Composable, Identifiable {
 
     func reduce(_ action: Action) async {
         switch action {
-        case .closeButtonTapped:
-            // 閉じるのは親(LogList)が行う。
-            break
-
         case .deleteButtonTapped:
             state.isDeleting = true
             state.deleteFailed = false
@@ -47,7 +45,7 @@ final class LogDetail: Composable, Identifiable {
             }
 
         case .deleteResponse(.success):
-            // 一覧から消して閉じるのは親(LogList)が行う。
+            // 一覧から消して戻るのは親(LogList)が行う。
             state.isDeleting = false
 
         case .deleteResponse(.failure):
@@ -57,7 +55,6 @@ final class LogDetail: Composable, Identifiable {
     }
 
     enum Action: Sendable {
-        case closeButtonTapped
         case deleteButtonTapped
         case deleteResponse(Result<ReadingLog.ID, any Error>)
     }

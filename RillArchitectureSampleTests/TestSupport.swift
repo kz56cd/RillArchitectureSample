@@ -58,3 +58,11 @@ extension AppRoot {
         return homeTabs
     }
 }
+
+extension LogList {
+    /// 一番上に積んだ詳しい画面
+    var topDetail: LogDetail? {
+        guard case let .detail(detail) = state.path.last else { return nil }
+        return detail
+    }
+}

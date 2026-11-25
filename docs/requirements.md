@@ -8,7 +8,8 @@
   View は状態を持たない(`@State` はアプリの一番上の `AppRoot` だけ)。
 - `Composable` が `State` と `state` を要件にしているので、どのストアも同じ形になる(`Packages/Rill/Sources/Rill/Composable.swift`)。
 - 状態を変える入口は `send(Action)` の 1 つだけ。
-- 遷移も状態として持つ。`AppRoot.State.screen`、`NewLog.State.phase`、`LogList.State.detail` に子のストアを入れれば出て、外せば消える。
+- 遷移も状態として持つ。`AppRoot.State.screen`、`NewLog.State.phase`、`LogList.State.filter`(シート)に子のストアを入れれば出て、外せば消える。
+  push も同じで、`LogList.State.path` に子のストアを積めば進み、取り除けば戻る。
 
 ```swift
 @Observable
@@ -16,8 +17,10 @@ final class LogList: Composable {
 
     struct State {
         var logs: [ReadingLog] = []
-        var detail: LogDetail?
         var loadFailed = false
+        var minimumRating: Int?
+        var path: [Destination] = []   // push で積んだ画面
+        var filter: LogFilter?         // シート
     }
 
     private(set) var state: State
@@ -30,7 +33,7 @@ final class LogList: Composable {
 `store.prettyState` で、状態を字下げした文字列にできる。`store.printState()` はそれをコンソールに出す。
 LLDB では `po store.prettyState` で見られる。
 
-子のストアは、その `State` を入れ子で並べるので、一番上の `AppRoot` から出すとアプリ全体の状態が 1 つの木で見える。
+子のストアは、その `State` を入れ子で並べるので(push で積んだ画面も含む)、一番上の `AppRoot` から出すとアプリ全体の状態が 1 つの木で見える。
 集合と辞書は並べ替えて出すので、何度出しても同じ文字列になる(テストで丸ごと比べられる)。
 
 ```
@@ -52,8 +55,18 @@ AppRoot.State(
         logs: [
           ReadingLog(...)
         ],
-        detail: nil,
-        loadFailed: false
+        loadFailed: false,
+        minimumRating: nil,
+        path: [
+          .detail(
+            LogDetail.State(
+              log: ReadingLog(...),
+              isDeleting: false,
+              deleteFailed: false
+            )
+          )
+        ],
+        filter: nil
       )
     )
   )
@@ -65,7 +78,7 @@ AppRoot.State(
 
 ## 2. テストしやすい
 
-`make test` で 47 件(アプリのストア 22 件、Rill パッケージ 25 件)。
+`make test` で 54 件(アプリのストア 25 件、Rill パッケージ 29 件)。
 どれも View を立ち上げず、ストアを作って `await send(...)` し、状態を確かめるだけ。
 
 アプリのストアのテスト(`RillArchitectureSampleTests`):
@@ -75,8 +88,8 @@ AppRoot.State(
 | `LogFormTests` | 1 つのストア。依存の差し替え(`testDependency(of:)`)、親へ届いた Action |
 | `NewLogTests` | 親子。子へ `send` すると、親の状態が変わる |
 | `HomeTabsTests` | 兄弟。記録する画面で保存すると、親が中継して一覧に足される |
-| `LogListTests` | シートの子。子の「閉じる」「削除」で、親が閉じる |
-| `AppRootTests` | ログイン → 記録 → 一覧 → ログアウトを、Action だけで通す。アプリ全体の状態を `prettyState` で丸ごと比べる |
+| `LogListTests` | push とシートの子。記録を選ぶと積み、戻ると取り除く。子の「削除」で親が戻す。絞り込みのシートで選ぶと、親が絞り込んで閉じる |
+| `AppRootTests` | ログイン → 記録 → 一覧 → ログアウトを、Action だけで通す。積んだ画面も含めたアプリ全体の状態を `prettyState` で丸ごと比べる |
 
 Rill パッケージのテスト(`RillTests`)。アプリの型を使わず、テスト用の小さなストアで決まりそのものを確かめる:
 
@@ -84,16 +97,17 @@ Rill パッケージのテスト(`RillTests`)。アプリの型を使わず、�
 |---|---|
 | `ComposableTests` | `send` は `reduce` で状態を確定してから親へ伝える。`reduce` の中で待つ処理も終わりまで待つ。`reduce` の中から `send` すると結果が先に親へ届く。`reduce` を書かないストアは親へそのまま伝える |
 | `PresentationTests` | `presentation` の Binding は子のストアを返す。`nil` を入れると dismiss の Action を送って閉じる。`nil` 以外を入れても何も送らない |
+| `NavigationTests` | `navigationPath` の Binding は積んだ子のストアを返す。短くすると、残った数で pop の Action を送って戻る。長くしても何も送らない。`IdentityHashable` は同じストアだけを等しいとみなし、状態が変わってもハッシュ値は変わらない |
 | `DependencyClientTests` | `testDependency` は差し替えた所だけを変え、`testValue` そのものは変えない |
-| `PrettyPrinterTests` | 文字、数、`Optional`、構造体、列挙型(関連値つき)、配列、集合、辞書、入れ子のストアを、決まった形で字下げして出す |
+| `PrettyPrinterTests` | 文字、数、`Optional`、構造体、列挙型(関連値つき)、配列、集合、辞書、入れ子のストア(積んだストアを含む)を、決まった形で字下げして出す |
 
-`send` の順番を逆にすると、`ComposableTests` と `PresentationTests` の 5 件が落ちることを確かめてある。
+`send` の順番を逆にすると、`ComposableTests`、`PresentationTests`、`NavigationTests` の 6 件が落ちることを確かめてある。
 
 `send` は `reduce` の終わりまで待つので、待ち合わせのコードは要らない。
 
 ## 3. 単一方向である
 
-`make check-unidirectional` で確かめる。`Checks/UnidirectionalViolations.swift` の、外から状態を書き換える 9 行が、
+`make check-unidirectional` で確かめる。`Checks/UnidirectionalViolations.swift` の、外から状態を書き換える 11 行が、
 すべて `setter is inaccessible` のコンパイルエラーになる。
 
 決まり:
@@ -105,8 +119,17 @@ Rill パッケージのテスト(`RillTests`)。アプリの型を使わず、�
 3. 親から子への指示も `await child.send(...)` で行う(`HomeTabs` が `logList.send(.logAdded(...))` を呼ぶ)。
 4. `reduce` の中で `Task { }` を作らない。
 
-シートは `$store.state.detail` で束縛できない(決まり 1)。代わりに `store.presentation(\.state.detail, dismiss: .detailDismissed)`
-(`Packages/Rill/Sources/Rill/Composable+Presentation.swift`)を使い、スワイプで閉じたときも Action を通す。
+画面の遷移も、SwiftUI に状態を直接書き換えさせない(決まり 1)。
+
+- シートは `$store.state.filter` で束縛できない。代わりに `store.presentation(\.state.filter, dismiss: .filterDismissed)`
+  (`Packages/Rill/Sources/Rill/Composable+Presentation.swift`)を使い、スワイプで閉じたときも Action を通す。
+- push は `NavigationStack(path: $store.state.path)` で束縛できない。代わりに
+  `store.navigationPath(\.state.path, pop: { .pathPopped(count: $0) })`(`Packages/Rill/Sources/Rill/Composable+Navigation.swift`)を使い、
+  戻るボタンや端からのスワイプで戻ったときも、残った画面の数を Action で送る。
+  積むのは `reduce` の中だけ。`NavigationLink(value:)` は使わず、ボタンで Action を送る(SwiftUI が足そうとしても無視する)。
+- `NavigationStack` の path の要素は `Hashable` でなければならない。ストアは `IdentityHashable` に準拠させ、同じストアかどうかで比べる。
+  モジュールの既定の隔離が MainActor なので、`final class LogDetail: Composable, nonisolated IdentityHashable` と `nonisolated` を付ける
+  (付けないと `Hashable` への準拠が MainActor に隔離され、コンパイルエラーになる)。
 
 ## 4. View 同士の連携がしやすい
 
@@ -115,5 +138,6 @@ Rill パッケージのテスト(`RillTests`)。アプリの型を使わず、�
 | 子から親 | `LogForm` の `saveResponse` → `NewLog.reduce` の `.form(.saveResponse(.success))` |
 | 親から子 | `HomeTabs.reduce` が `logList.send(.logAdded(...))` |
 | 兄弟の間 | 記録する画面(孫)で保存 → `HomeTabs` が受けて → 一覧へ送る |
-| 子を出す、閉じる | `LogList.State.detail`(シート)。子の「閉じる」「削除」は親が受けて `nil` にする |
+| 子を積む、戻る(push) | `LogList.State.path`。記録を選ぶと `LogDetail` を積む。子の「削除」は親が受けて取り除く |
+| 子を出す、閉じる(シート) | `LogList.State.filter`。子の「評価を選ぶ」「キャンセル」は親が受けて `nil` にする |
 | 画面の切り替え | `AppRoot.State.screen`(ログイン ↔ タブ)、`NewLog.State.phase`(入力中 ↔ 保存したあと) |

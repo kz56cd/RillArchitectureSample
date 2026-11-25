@@ -1,3 +1,4 @@
+import Rill
 import SwiftUI
 
 /// タブの画面
@@ -18,8 +19,10 @@ struct HomeTabsView: View {
                 }
             }
             Tab("一覧", systemImage: "books.vertical") {
-                NavigationStack {
-                    LogListView(store: store.state.logList)
+                // 積んだ画面は LogList の状態(path)。戻ったときも Action を通す。
+                let logList = store.state.logList
+                NavigationStack(path: logList.navigationPath(\.state.path, pop: { .pathPopped(count: $0) })) {
+                    LogListView(store: logList)
                         .toolbar { signOutButton }
                 }
             }

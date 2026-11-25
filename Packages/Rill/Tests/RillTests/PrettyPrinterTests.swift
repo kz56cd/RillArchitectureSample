@@ -120,17 +120,26 @@ struct PrettyPrinterTests {
 
     // MARK: ストア
 
-    @Test func prettyState_子のストアの状態も入れ子で出す() async {
+    @Test func prettyState_子と積んだストアの状態も入れ子で出す() async {
         let sut = Counter(state: .init(count: 1))
         await sut.send(.openChildButtonTapped)
+        await sut.send(.pushButtonTapped)
 
         #expect(sut.prettyState == """
             Counter.State(
               count: 1,
               child: Counter.State(
                 count: 0,
-                child: nil
-              )
+                child: nil,
+                path: []
+              ),
+              path: [
+                Counter.State(
+                  count: 0,
+                  child: nil,
+                  path: []
+                )
+              ]
             )
             """)
     }

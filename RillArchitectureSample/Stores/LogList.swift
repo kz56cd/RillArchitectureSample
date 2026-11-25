@@ -3,14 +3,32 @@ import Observation
 
 /// 記録の一覧の画面のストア
 ///
-/// 記録の一覧を持つ。記録を選ぶと、詳しい画面を子のストア(`detail`)としてシートで出す。
+/// 記録の一覧を持つ。記録を選ぶと、詳しい画面を子のストアとして `path` に積む(push)。
+/// 絞り込みの画面は、子のストア(`filter`)としてシートで出す。
 @Observable
 final class LogList: Composable {
 
     struct State {
         var logs: [ReadingLog] = []
-        var detail: LogDetail?
         var loadFailed = false
+        /// 評価で絞り込む。nil ならすべて
+        var minimumRating: Int?
+        /// 積んだ画面。先頭が一番下
+        var path: [Destination] = []
+        var filter: LogFilter?
+
+        /// 絞り込んだあとの記録
+        var visibleLogs: [ReadingLog] {
+            guard let minimumRating else {
+                return logs
+            }
+            return logs.filter { ($0.rating ?? 0) >= minimumRating }
+        }
+    }
+
+    /// 一覧から積む画面。画面が増えたら case を足す
+    enum Destination: Hashable {
+        case detail(LogDetail)
     }
 
     // MARK: State
@@ -56,17 +74,32 @@ final class LogList: Composable {
             state.logs.insert(log, at: 0)
 
         case let .logTapped(log):
-            state.detail = LogDetail(appDependencies, state: .init(log: log), action: { [weak self] in await self?.send(.detail($0)) })
+            let detail = LogDetail(appDependencies, state: .init(log: log), action: { [weak self] in await self?.send(.detail($0)) })
+            state.path.append(.detail(detail))
 
-        case .detailDismissed, .detail(.closeButtonTapped):
-            state.detail = nil
+        case let .pathPopped(count):
+            state.path.removeLast(state.path.count - count)
 
         case let .detail(.deleteResponse(.success(id))):
             state.logs.removeAll { $0.id == id }
-            state.detail = nil
+            // 消した記録の画面から戻る。
+            state.path.removeAll { destination in
+                guard case let .detail(detail) = destination else { return false }
+                return detail.state.log.id == id
+            }
 
         case .detail:
             break
+
+        case .filterButtonTapped:
+            state.filter = LogFilter(state: .init(minimumRating: state.minimumRating), action: { [weak self] in await self?.send(.filter($0)) })
+
+        case let .filter(.ratingSelected(rating)):
+            state.minimumRating = rating
+            state.filter = nil
+
+        case .filterDismissed, .filter(.cancelButtonTapped):
+            state.filter = nil
         }
     }
 
@@ -76,8 +109,12 @@ final class LogList: Composable {
         /// 兄弟(記録する画面)で保存した記録。親の HomeTabs が中継して送る
         case logAdded(ReadingLog)
         case logTapped(ReadingLog)
-        /// シートを下へのスワイプで閉じた
-        case detailDismissed
+        /// 戻るボタンや端からのスワイプで戻った。値は残った画面の数
+        case pathPopped(count: Int)
         case detail(LogDetail.Action)
+        case filterButtonTapped
+        /// シートを下へのスワイプで閉じた
+        case filterDismissed
+        case filter(LogFilter.Action)
     }
 }
