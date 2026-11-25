@@ -86,7 +86,7 @@ struct AlertTests {
         #expect(ButtonRole(Role.close) == .close)
     }
 
-    @Test func 文言_文字列リテラルがキーになる() {
+    @Test func 文言_タイトルとメッセージとボタンの文言を持つ() {
         let alert = AlertState<Counter.Action>(
             title: "数を 0 に戻しますか?",
             message: "元に戻せません。",

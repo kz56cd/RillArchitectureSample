@@ -570,9 +570,6 @@
 		5BA02C7903DAF4A1BEA8DCD3 /* XCLocalSwiftPackageReference "." */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = .;
-			traits = (
-				NoLocalization,
-			);
 		};
 /* End XCLocalSwiftPackageReference section */
 

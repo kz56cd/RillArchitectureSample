@@ -15,37 +15,23 @@ import Foundation
 /// )
 /// ```
 ///
-/// 文言は `DisplayText` で持つ。文字列リテラルは訳し(リテラルがキーになる)、`String` の変数は訳さずにそのまま出す。
-///
 /// SwiftUI では `alert(store:state:dismiss:)`、`confirmationDialog(store:state:dismiss:)` で出す。
 nonisolated public struct AlertState<Action: Sendable>: Sendable {
 
     // MARK: Properties
 
-    public var title: DisplayText
-    public var message: DisplayText?
+    public var title: String
+    public var message: String?
     /// 空なら、閉じるだけの「OK」を出す。
     public var buttons: [AlertButton<Action>]
 
     // MARK: Initializers
 
-    public init(title: DisplayText, message: DisplayText? = nil, buttons: [AlertButton<Action>] = []) {
+    public init(title: String, message: String? = nil, buttons: [AlertButton<Action>] = []) {
         self.title = title
         self.message = message
         self.buttons = buttons
     }
-
-    #if !NoLocalization
-    /// タイトルを、訳さずにそのまま出す。サーバーから届いた文言などに使う
-    ///
-    /// メッセージも `String` の変数で渡すときは、`DisplayText(message)` と書く。
-    /// メッセージに文字列リテラルを書いたときに、訳さない扱いへ黙って変わらないようにするため。
-    /// (trait `NoLocalization` のときは `DisplayText` が `String` なので、この重ね書きは要らない)
-    @_disfavoredOverload
-    public init<S: StringProtocol>(title: S, message: DisplayText? = nil, buttons: [AlertButton<Action>] = []) {
-        self.init(title: DisplayText(title), message: message, buttons: buttons)
-    }
-    #endif
 }
 
 /// アラートと確認ダイアログのボタン
@@ -65,26 +51,18 @@ nonisolated public struct AlertButton<Action: Sendable>: Sendable {
 
     // MARK: Properties
 
-    public var title: DisplayText
+    public var title: String
     public var role: Role?
     /// 押したときに送る Action。nil なら閉じるだけ
     public var action: Action?
 
     // MARK: Initializers
 
-    public init(_ title: DisplayText, role: Role? = nil, action: Action? = nil) {
+    public init(_ title: String, role: Role? = nil, action: Action? = nil) {
         self.title = title
         self.role = role
         self.action = action
     }
-
-    #if !NoLocalization
-    /// 文言を、訳さずにそのまま出す。データから作るボタンなどに使う
-    @_disfavoredOverload
-    public init<S: StringProtocol>(_ title: S, role: Role? = nil, action: Action? = nil) {
-        self.init(DisplayText(title), role: role, action: action)
-    }
-    #endif
 }
 
 extension AlertState: Equatable where Action: Equatable {}
